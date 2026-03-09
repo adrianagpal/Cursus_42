@@ -1,8 +1,25 @@
-# define BUFFER_SIZE 1000000
+# define BUFFER_SIZE 10
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+int next_read_error = 0;
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*ptr;
+	size_t			index;
+
+	ptr = (unsigned char *)s;
+	index = 0;
+	while (index < n)
+	{
+		ptr[index] = (unsigned char)c;
+		index++;
+	}
+	return (ptr);
+}
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
@@ -81,6 +98,15 @@ int read_bytes(int fd, int *index, int *bytes, char *temp)
     return (0);
 }
 
+void free_and_set(char **new_line, int *index, int *bytes, char *temp)
+{
+    if (*new_line)
+        free (*new_line);
+    ft_memset(temp, 0, BUFFER_SIZE);
+    *index = 0;
+    *bytes = 0;
+}
+
 char    *build_line(int fd, char **new_line)
 {
     static int bytes;
@@ -93,6 +119,10 @@ char    *build_line(int fd, char **new_line)
     newline_index = 0;
     while (1)
     {
+        if (next_read_error == -1)
+        {
+            break ;
+        }   
         if (read_bytes(fd, &temp_index, &bytes,  temp) == -1)
             break ;
         while (temp_index < bytes){
@@ -105,7 +135,7 @@ char    *build_line(int fd, char **new_line)
         *new_line = append_char(*new_line, '\0', &newline_index, &newline_capacity);                    
         return (*new_line);
     }
-    free (*new_line);
+    free_and_set(new_line, &temp_index, &bytes, temp);
     return (NULL);
 }
 
@@ -141,4 +171,3 @@ int main(void)
     }
     return (0);
 }
-

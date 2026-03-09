@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adri <adri@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 01:34:08 by adri              #+#    #+#             */
-/*   Updated: 2026/03/07 01:34:27 by adri             ###   ########.fr       */
+/*   Updated: 2026/03/09 16:04:53 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*ptr;
+	size_t			index;
+
+	ptr = (unsigned char *)s;
+	index = 0;
+	while (index < n)
+	{
+		ptr[index] = (unsigned char)c;
+		index++;
+	}
+	return (ptr);
+}
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adri <adri@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 01:34:36 by adri              #+#    #+#             */
-/*   Updated: 2026/03/07 01:48:32 by adri             ###   ########.fr       */
+/*   Updated: 2026/03/09 18:20:16 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ char    *ft_realloc(char *ptr, size_t size, int n_char);
 char    *append_char(char *ptr, char letter, int *ptr_index, int *capacity);
 int fill_line(char **new_line, char letter, int *newline_index, int *newline_capacity);
 int read_bytes(int fd, int *index, int *bytes, char *temp);
-char    *build_line(int fd);
+char    *build_line(int fd, char **new_line);
+void	*ft_memset(void *s, int c, size_t n);
+void free_and_set(char **new_line, int *index, int *bytes, char *temp);
 char    *get_next_line(int fd);
 
 #endif
