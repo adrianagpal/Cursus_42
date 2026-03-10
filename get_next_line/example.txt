@@ -1,28 +1,69 @@
-char    *build_line(int fd)
+void	*ft_memset(void *s, int c, size_t n)
 {
-    int bytes;
-    char    *new_line;
-    static char    temp[BUFFER_SIZE];
-    static int index;
-    int capacity;
+	unsigned char	*ptr;
+	size_t			index;
 
-    capacity = 0;
-    new_line = NULL;
-    while (1)
+	ptr = (unsigned char *)s;
+	index = 0;
+	while (index < n)
+	{
+		ptr[index] = (unsigned char)c;
+		index++;
+	}
+	return (ptr);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t			index;
+	unsigned char	*ptr_dest;
+	unsigned char	*ptr_src;
+
+	if (!dest && !src)
+	{
+		return (NULL);
+	}
+	ptr_dest = (unsigned char *)dest;
+	ptr_src = (unsigned char *)src;
+	index = 0;
+	while (index < n)
+	{
+		ptr_dest[index] = ptr_src[index];
+		index++;
+	}
+	return (dest);
+}
+
+char    *ft_realloc(char *ptr, size_t size, int n_char)
+{
+    char    *line;
+
+    line = malloc(sizeof(char) * size);
+    if (!line)
+        return (NULL);
+    if (ptr)
     {
-        if (index == 0)
-            bytes = read(fd, temp, BUFFER_SIZE);
-        if (bytes > 0)
-        {
-            while (index < bytes)
-            {
-                if (temp[index] == '\n')                
-                    return (fill_line(&new_line, temp, &index, &capacity));
-                new_line = fill_line(&new_line, temp, &index, &capacity);
-            }
-            index = 0;
-        }
-        else
-           return (new_line); 
+        ft_memcpy(line, ptr, n_char);
+        free (ptr);
+        ptr = NULL;
+    }    
+    return (line);
+}
+
+char    *append_char(char *ptr, char letter, int *ptr_index, int *capacity)
+{
+    if (*ptr_index == 0)
+    {
+        *capacity = 32;
+        ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
+    }   
+    if (*ptr_index > *capacity)
+    {
+        *capacity *= 2;
+        ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
     }
+    ptr[*ptr_index] = letter;
+    (*ptr_index)++;
+
+    return (ptr);
 }

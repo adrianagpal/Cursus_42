@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 01:34:08 by adri              #+#    #+#             */
-/*   Updated: 2026/03/09 16:04:53 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:41:19 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,36 +48,62 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char    *ft_realloc(char *ptr, size_t size, int n_char)
+char	*ft_realloc(char *ptr, size_t size, int n_char)
 {
-    char    *line;
+	char	*line;
 
-    line = malloc(sizeof(char) * size);
-    if (!line)
-        return (NULL);
-    if (ptr)
-    {
-        ft_memcpy(line, ptr, n_char);
-        free (ptr);
-        ptr = NULL;
-    }    
-    return (line);
+	line = malloc(sizeof(char) * size);
+	if (!line)
+		return (NULL);
+	if (ptr)
+	{
+		ft_memcpy(line, ptr, n_char);
+		free (ptr);
+		ptr = NULL;
+	}
+	return (line);
 }
 
-char    *append_char(char *ptr, char letter, int *ptr_index, int *capacity)
+/*
+append_char checks if line capacity allows to copy enough according to the 
+line index. For a new line (line index = 0), it will create a dynamically 
+allocated string of a given size. If capacity is not enough, it will duplicate
+the size of the string. After checking there is enough space to copy, it will 
+append a given character. 
+*/
+char	*append_char(char *ptr, char letter, int *ptr_index, int *capacity)
 {
-    if (*ptr_index == 0)
-    {
-        *capacity = 32;
-        ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
-    }   
-    if (*ptr_index > *capacity)
-    {
-        *capacity *= 2;
-        ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
-    }
-    ptr[*ptr_index] = letter;
-    (*ptr_index)++;
+	if (*ptr_index == 0)
+	{
+		*capacity = 32;
+		ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
+	}
+	while (*ptr_index > *capacity)
+	{
+		*capacity *= 2;
+		ptr = ft_realloc(ptr, *capacity + 1, *ptr_index);
+	}
+	ptr[*ptr_index] = letter;
+	if (ptr[*ptr_index] != letter)
+	{
+		return (NULL);
+	}
+	(*ptr_index)++;
+	return (ptr);
+}
 
-    return (ptr);
+/*
+free_and_set frees the pointer if it was not null, 
+and sets all static variables to 0. 
+*/
+void	free_and_set(char **new_line, int *index, int *bytes, char *temp)
+{
+	if (*new_line)
+	{
+		free (*new_line);
+		*new_line = NULL;
+	}
+	ft_memset(temp, 0, BUFFER_SIZE);
+	*index = 0;
+	*bytes = 0;
 }
