@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 01:34:30 by adri              #+#    #+#             */
-/*   Updated: 2026/03/10 19:41:24 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/03/11 16:33:37 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ char	*build_line(int fd, int *bytes, int *temp_idx, char *temp)
 	line_cap = 0;
 	line_idx = 0;
 	line = NULL;
-	while (1)
+	while (read_bytes(fd, temp_idx, bytes, temp) != -1)
 	{
-		if (read_bytes(fd, temp_idx, bytes, temp) == -1)
-			break ;
+	//	if (read_bytes(fd, temp_idx, bytes, temp) == -1)
+	//		break ;
 		while (*temp_idx < *bytes)
 		{
 			if (fill_line(&line, temp[(*temp_idx)++], &line_idx, &line_cap))
