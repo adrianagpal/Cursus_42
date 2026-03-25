@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "push_swap_library.h"
 
-typedef struct t_list
+/*typedef struct t_list
 {
     void    *content;
     struct t_list    *next;
-}   s_list;
+}   s_list;*/
 
 s_list  *create_node(int *content)
 {
@@ -17,7 +17,7 @@ s_list  *create_node(int *content)
     {
         return (NULL);
     }
-    node->content = content;
+    node->content = *content;
     node->next = NULL;
     return (node);
 }
@@ -78,7 +78,7 @@ s_list  *array_to_list(int *stack, size_t size)
     return (list);
 }
 
-int main(void)
+/*int main(void)
 {
     s_list  *list;
     s_list  *list2;
@@ -88,16 +88,21 @@ int main(void)
     s_list  *node4;
     s_list  *last;
 
-    /*node1 = create_node("hola");
-    node2 = create_node("que");
-    node3 = create_node("tal");
-    node4 = create_node("adios");
+    int num1 = 32;
+    int num2 = 5;
+    int num3 = 68;
+    int num4 = 122;
+
+    node1 = create_node(&num1);
+    node2 = create_node(&num2);
+    node3 = create_node(&num3);
+    node4 = create_node(&num4);
 
     list = node1;
     ft_lstadd_back(&list, node2);
     ft_lstadd_back(&list, node3);
 
-    printf("%s", (char *)list->content);*/
+    printf("%d", list->content);
 
     int    arr[5];
     int index = 0;
@@ -110,7 +115,7 @@ int main(void)
 
     list2 = array_to_list(arr, 5);
 
-    /* Hay que hacerlo así porque printf recorre la lista hasta que encuentra un |0 e imprime toda la lista*/
-    printf("%d", *(int *)((list2->next)->content));
-}
+    Hay que hacerlo así porque printf recorre la lista hasta que encuentra un |0 e imprime toda la lista
+    printf("%d", list2->content);
+}*/
 

@@ -4,9 +4,14 @@
 
 typedef struct t_list
 {
-    void    *content;
+    int content;
     struct t_list    *next;
 }   s_list;
+
+s_list  *create_node(int *content);
+s_list  *ft_lstlast(s_list *list);
+void    ft_lstadd_back(s_list **list, s_list *node);
+s_list  *array_to_list(int *stack, size_t size);
 
 
 #endif
