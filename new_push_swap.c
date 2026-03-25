@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+typedef enum
+{
+    FALSE,
+    TRUE
+} t_bool;
+
 typedef struct s_list
 {
     int number;
@@ -11,7 +17,7 @@ typedef struct s_list
 
 int	ft_atoi(const char *nptr)
 {
-	int	result;
+	int result;
 	int	index;
 	int	sign;
 
@@ -205,11 +211,90 @@ double compute_disorder(t_list **a)
     return (1 - (double)mistakes / (double)total_pairs);
 }
 
+/* CHECK ERRORS */
+int check_valid(char **argv, int argc)
+{
+    int index;
+    int j;
+    char ch;
+
+    index = 0;
+    j = 0;
+    while (index < argc - 1)
+    {
+        while ((ch = argv[index + 1][j]) != '\0')
+        {
+            if (!(ch >= '0' && ch <= '9') && ch != ' ')
+                return (FALSE);
+            j++;
+        }
+        index++;
+    }
+    return (TRUE); 
+}
+
+t_list  *load_list(char **argv, int argc)
+{
+    int index;
+    int j;
+    int flag;
+    t_list  *node = NULL;
+    t_list  *list = NULL;
+
+    index = 0;
+    while (index < argc - 1)
+    {
+        j = 0;
+        flag = 0;
+        while (argv[index + 1][j] != '\0')
+        {
+            /* Falta comprobar si hay signos - seguidos */
+            if (((argv[index + 1][j] >= '0' && argv[index + 1][j] <= '9') 
+                || argv[index + 1][j] == '-') && flag == 0)
+            {
+                node = ft_create_node(ft_atoi(&argv[index + 1][j]));
+                ft_lstadd_back(&list, node);
+                flag = 1;
+            }
+            else if (argv[index + 1][j] == ' ')
+                flag = 0;
+            j++;
+        }
+        index++;
+    }
+    return (list); 
+}
+
+t_bool check_duplicates(t_list *list)
+{
+    t_list  *current;
+    t_list  *temp;
+
+    current = list;
+    temp = list->next;
+    while (current->next != list)
+    {
+        while (temp != list)
+        {
+            printf("%dy%d:", current->number, temp->number);
+            if (current->number == temp->number) 
+            {
+                return (FALSE);
+            }   
+            temp = temp->next;
+        }
+        current = current->next;
+        temp = current->next;
+    }
+    return (TRUE);
+}
+
 int main(int argc, char **argv)
 {
     int index;
     t_list  *list = NULL;
     t_list  *list2 = NULL;
+    t_list  *list3 = NULL;
     t_list  *node;
 
     index = 0;
@@ -218,13 +303,7 @@ int main(int argc, char **argv)
         printf("Error");
         return (1);
     }
-    while (index < argc - 1)
-    {
-        /*printf("%d", ft_atoi(argv[index + 1]));*/
-        node = ft_create_node(ft_atoi(argv[index + 1]));
-        ft_lstadd_back(&list, node);
-        index++;
-    }
+    list = load_list(argv, argc);
     
     printf("%d\n", list->number);
     printf("%d\n", list->next->number);
@@ -233,7 +312,29 @@ int main(int argc, char **argv)
     double desorden = compute_disorder(&list);
     printf("%f\n", desorden);
 
+    int valid = check_valid(argv, argc);
+    printf("%d\n", valid);
+
+    if (check_valid(argv, argc) == TRUE)
+    {
+        list3 = load_list(argv, argc);
+    }    
+    if (check_duplicates(list3) == FALSE)
+    {
+
+    }
+    printf("%d\n", list3->number);
+    printf("%d\n", list3->next->number);
+    printf("%d\n", list3->next->next->number);
+    printf("%d\n", list3->next->next->next->number);
+    printf("%d\n", list3->next->next->next->next->number);
+
+    int check = check_duplicates(list3);
+    printf("%d\n", check);
+
+
+    int atoi = ft_atoi("3465237636732");
+    printf("%d", atoi);
 
     return (0);
-
 }
