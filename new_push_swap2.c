@@ -301,101 +301,28 @@ int check_duplicates(t_list *list)
     return (inv);
 }
 
-int *check_delta(t_list **a, t_list **b, int *mov)
-{
-    sa(a);
-    mov[0] = check_duplicates(*a);
-    sa(a);
-
-    if (*b)
-    {   
-        pa(a, b);
-        mov[1] = check_duplicates(*a);
-        pb(a, b);
-    }
-    /* Pasar primer numero de a a b */
-    pb(a, b);
-    mov[2] = check_duplicates(*a);
-    pa(a, b);
-
-    ra(a);
-    mov[3] = check_duplicates(*a);
-    rra(a);
-
-    rra(a);
-    mov[4] = check_duplicates(*a);
-    ra(a);
-    return (mov);
-}
-
-int best_movement(int *movements)
-{
-    int index;
-    int min;
-
-    index = 0;
-    min = 0;
-    while (index < 6)
-    {
-        if (movements[index] < movements[min])
-            min = index;
-        index++;
-    }
-    return (min);
-}
-
-void    perform_movement(t_list **a, t_list **b)
-{
-    int best_mov;
-    int mov[6];
-    static int movimiento;
-
-    best_mov = 0;
-    movimiento = 0;
-    mov[5] = check_duplicates(*a);
-    best_mov = best_movement(check_delta(a, b, mov));
-    if (best_mov == movimiento)
-    {
-        best_mov = 5;
-    }
-    movimiento = best_mov;
-    if (best_mov == 0)
-    {
-        sa(a);
-        write(1, "sa\n", 3);
-    }    
-    else if (best_mov == 1)
-    {
-        pa(a, b);
-        write(1, "pa\n", 3);
-    }  
-    else if (best_mov == 2)
-    {
-        pb(a, b);
-        write(1, "pb\n", 3);
-    }
-    else if (best_mov == 3)
-    {
-        ra(a);
-        write(1, "ra\n", 3);
-    }
-    else if (best_mov == 4)
-    {
-        rra(a);
-        write(1, "rra\n", 4);
-    }
-}
-
-void    order_list(t_list **a, t_list **b)
+void check_maximum(t_list **a, t_list **b)
 {
     t_list  *temp;
+    t_list  *max;
 
-    temp = *a;
-    while (temp->next != *a)
+    while (*a)
     {
-        perform_movement(a, b);
-        temp = temp->next;
-    }
+        temp = *a;
+        max = temp;
+
+        while (temp != *a)
+        {
+            if (temp->number > max->number)
+            {
+                max = temp;
+            }
+            temp = temp->next;
+        }
+        while ((*a)->number != max->number)
+            ra(a);  // rotate a
+        pb(a, b);
+    }    
 }
 
 int main(int argc, char **argv)
@@ -438,7 +365,7 @@ int main(int argc, char **argv)
     printf("Duplicates:%d\n", check);
     printf("Inversions:%d\n", inv);*/
 
-    order_list(&list, &list3);
+    check_maximum(&list, &list3);
     printf("New list:\n%d\n", list->number);
     printf("%d\n", list->next->number);
     printf("%d\n", list->next->next->number);
