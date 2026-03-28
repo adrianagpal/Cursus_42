@@ -11,6 +11,7 @@ typedef enum
 typedef struct s_list
 {
     int number;
+    int index;
     struct s_list   *next;
     struct s_list   *prev;
 }   t_list;
@@ -225,11 +226,11 @@ int check_valid(char **argv, int argc)
     int j;
     char ch;
 
-    index = 0;
+    index = 1;
     while (index < argc)
     {
         j = 0;
-        while ((ch = argv[index + 1][j]) != '\0')
+        while ((ch = argv[index][j]) != '\0')
         {
             if (!(ch >= '0' && ch <= '9') && ch != ' ')
                 return (FALSE);
@@ -247,23 +248,24 @@ void    load_list(t_list **list, char **argv, int argc)
     int flag;
     t_list  *node = NULL;
 
-    index = 0;
+    index = 1;
     while (index < argc)
     {
         j = 0;
         flag = 0;
-        while (argv[index + 1][j] != '\0')
+        while (argv[index][j] != '\0')
         {
             /* Falta comprobar si hay signos - seguidos */
-            if (((argv[index + 1][j] >= '0' && argv[index + 1][j] <= '9') 
-                || argv[index + 1][j] == '-') && flag == 0)
+            if (((argv[index][j] >= '0' && argv[index][j] <= '9') || argv[index][j] == '-') && flag == 0)
             {
-                node = ft_create_node(ft_atoi(&argv[index + 1][j]));
+                node = ft_create_node(ft_atoi(&argv[index][j]));
                 ft_lstadd_back(list, node);
                 flag = 1;
             }
-            else if (argv[index + 1][j] == ' ')
-                flag = 0;
+            else if (argv[index][j] == ' ')
+            {
+               flag = 0; 
+            } 
             j++;
         }
         index++;
@@ -276,6 +278,12 @@ int check_duplicates(t_list *list)
     t_list  *current;
     t_list  *temp;
     int inv;
+
+    if (!list)
+        return (-1);
+
+    if (list->next == list)
+        return 0;
 
     current = list;
     temp = list->next;
@@ -301,15 +309,83 @@ int check_duplicates(t_list *list)
     return (inv);
 }
 
-void check_maximum(t_list **a, t_list **b)
+int check_maximum(t_list **a, t_list **b)
 {
-    t_list  *temp;
-    t_list  *max;
+    t_list *temp;
+    t_list *max;
+    int n_mov = 0;
+    int ra_count, rra_count;
+    t_list *iter;
 
     while (*a)
     {
-        temp = *a;
-        max = temp;
+        // Encuentra el nodo con el valor máximo
+        max = *a;
+        temp = (*a)->next;
+        while (temp != *a)
+        {
+            if (temp->number > max->number)
+                max = temp;
+            temp = temp->next;
+        }
+
+        // Calcula cuántos RA se necesitan
+        ra_count = 0;
+        iter = *a;
+        while (iter != max)
+        {
+            ra_count++;
+            iter = iter->next;
+        }
+
+        // Calcula cuántos RRA se necesitan
+        rra_count = 0;
+        iter = *a;
+        while (iter != max)
+        {
+            rra_count++;
+            iter = iter->prev;  // retrocediendo
+        }
+
+        // Realiza la rotación más corta
+        if (ra_count <= rra_count)
+        {
+            while ((*a)->number != max->number)
+            {
+                ra(a);
+                write(1, "ra\n", 3);
+                n_mov++;
+            }
+        }
+        else
+        {
+            while ((*a)->number != max->number)
+            {
+                rra(a);
+                write(1, "rra\n", 4);
+                n_mov++;
+            }
+        }
+
+        // Empuja el máximo a la pila B
+        pb(a, b);
+        write(1, "pb\n", 3);
+        n_mov++;
+    }
+
+    return n_mov;
+}
+
+/*int check_maximum(t_list **a, t_list **b)
+{
+    t_list  *temp;
+    t_list  *max;
+    int n_mov = 0;
+
+    while (*a)
+    {
+        max = (*a);
+        temp = (*a)->next;
 
         while (temp != *a)
         {
@@ -320,9 +396,31 @@ void check_maximum(t_list **a, t_list **b)
             temp = temp->next;
         }
         while ((*a)->number != max->number)
+        {
             ra(a);  // rotate a
+            write (1, "ra\n", 3);
+            n_mov++;
+        }            
         pb(a, b);
-    }    
+        write (1, "pb\n", 3);
+        n_mov++;
+    }   
+    return(n_mov);
+}*/
+
+void apply_index(t_list **a, t_list **b)
+{
+    t_list  *max;
+    int index_a;
+
+    index_a = 0;
+    while (*b)
+    {
+        (*b)->index = index_a;
+        pa(a, b);
+        index_a++;
+    }  
+    //rra(a);  
 }
 
 int main(int argc, char **argv)
@@ -337,7 +435,7 @@ int main(int argc, char **argv)
     index = 0;
     if (argc < 2)
     {
-        char *debug_argv[] = {"push_swap", "4 3 2 6", "5"};
+        char *debug_argv[] = {"push_swap", "2 3 5 7 8 4 643 2543 21", "5"};
         argc = 2;
         argv = debug_argv;
     }
@@ -365,12 +463,18 @@ int main(int argc, char **argv)
     printf("Duplicates:%d\n", check);
     printf("Inversions:%d\n", inv);*/
 
-    check_maximum(&list, &list3);
+    int n_mov = check_maximum(&list, &list3);
+    apply_index(&list, &list3);
+
+    printf("Number of movements: %d\n", n_mov);
+
     printf("New list:\n%d\n", list->number);
     printf("%d\n", list->next->number);
     printf("%d\n", list->next->next->number);
     printf("%d\n", list->next->next->next->number);
     printf("%d\n", list->next->next->next->next->number);
+    printf("%d\n", list->next->next->next->next->next->number);
+    printf("%d\n", list->next->next->next->next->next->next->number);
 
     return (0);
 }
