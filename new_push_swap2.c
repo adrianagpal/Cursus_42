@@ -443,10 +443,10 @@ int main(int argc, char **argv)
     {
         load_list(&list, argv, argc);
     }
-    if ((disorder = check_duplicates(list)) == TRUE)
+    if ((disorder = check_duplicates(list)) == -1)
     {
         printf("Error");
-        /*return (1);*/
+        return (1);
         /* free list */
     }
     printf("This is chaos:%d\n", disorder);
@@ -473,8 +473,6 @@ int main(int argc, char **argv)
     printf("%d\n", list->next->next->number);
     printf("%d\n", list->next->next->next->number);
     printf("%d\n", list->next->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->next->next->number);
 
     return (0);
 }
