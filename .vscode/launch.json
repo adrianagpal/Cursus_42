@@ -5,11 +5,14 @@
     "version": "0.2.0",
     "configurations": [
 
+
+
+
         {
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "new_push_swap2",
+            "program": "new_push_swap6",
             "args": [],
             "cwd": "${workspaceRoot}"
         }
