@@ -161,7 +161,11 @@ void    pb(t_list **a, t_list **b)
 
 void    ra(t_list **a)
 {
-    *a = (*a)->next;    
+    t_list *temp;
+
+    temp = *a;
+    *a = (*a)->next;   
+    ft_lstadd_back(a, temp); 
     /*write(1, "ra\n", 3);*/
 }
 
@@ -360,15 +364,38 @@ void    apply_index(t_list **list)
     *list = temp;
 }
 
-/*void order_list(t_list **a, t_list **b)
+void order_list(t_list **a, t_list **b)
 {
-    int size;
     t_list *temp;
     t_list *min;
+    int size = 0;
     
     int index = 0;
-    
-    temp = *a;
+    temp = *a;  
+    while (temp != NULL)
+    {
+        temp = temp->next;
+        size++;
+    }  
+    while (size/2 > 0)
+    {
+        temp = *a;
+        if (temp->index > temp->next->index)
+        {
+            pb(a,b);
+            write(1, "pb\n", 3);
+        }
+        else
+        {
+            ra(a);
+            write(1, "ra\n", 3);
+        }
+        size--;        
+    }
+}
+
+/*
+    *a;
     size = 1;
     temp = temp->next;
     while (temp != *a)
@@ -474,6 +501,7 @@ int main(int argc, char **argv)
     printf("%d\n", list->next->next->next->next->next->next->next->index);
 
     apply_index(&list);
+    order_list(&list, &list3);
 
     printf("New list:\n%d\n", list->index);
     printf("%d\n", list->next->index);
