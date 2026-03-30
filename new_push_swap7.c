@@ -54,51 +54,63 @@ t_list  *ft_create_node(int number)
         return (NULL);
     }
     node->number = number;
-    node->next = node;
-    node->prev = node;
+    node->next = NULL;
+    node->prev = NULL;
     return (node);
 }
 
 void    ft_lstadd_back(t_list **list, t_list *new)
 {
+    t_list *last;
+
     if (!list || !new)
     {
         return ;
     }
+    new->next = NULL;
     if (!(*list))
     {
         *list = new;
-        new->next = new;
-        new->prev = new;
+        new->prev = NULL;
         return ;
     }
-    new->prev = (*list)->prev;
-    new->next = *list;
-    (*list)->prev->next = new;
-    (*list)->prev = new;
+    last = *list;
+    while (last->next != NULL)
+        last = last->next;
+    last->next = new;
+    new->prev = last;
 }
 
 void    ft_lstadd_front(t_list **list, t_list *new)
 {
-    ft_lstadd_back(list, new);
+    if (!list || !new)
+    {
+        return ;
+    }
+    new->prev = NULL;
+    new->next = *list;
+    if (*list)
+        (*list)->prev = new;
     *list = new;
 }
 
 void    swap(t_list **list)
 {
-    t_list *mem_next;
-    t_list *mem_prev;
+    t_list  *first;
+    t_list  *second;
 
-    if (!list)
+    if (!list || !(*list) || !(*list)->next)
         return ;
-    mem_next = (*list)->next->next;
-    mem_prev = (*list)->next;
-    (*list)->prev->next = (*list)->next;
-    (*list)->next->prev = (*list)->prev;
-    (*list)->next->next = *list;
-    (*list)->prev = mem_prev;
-    (*list)->next = mem_next;    
-    *list = mem_prev;
+    first = *list;
+    second = first->next;
+
+    first->next = second->next;
+    if (second->next)
+        second->next->prev = first;
+    second->prev = NULL;
+    second->next = first;
+    first->prev = second;
+    *list = second;
 }
 
 void    sa(t_list **a)
@@ -123,23 +135,15 @@ void    ss(t_list **a, t_list **b)
 void    push(t_list **a, t_list **b)
 {
     t_list  *node;
-    if (!b || !(*b))
-    {
-        return ;
-    }
-    node = *b;
-    if (node->next == node)
-    {
-        *b = NULL;
-        node->next = node->prev = node; 
-        ft_lstadd_front(a, node);
-        return ;
-    }
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-    *b = node->next;
 
-    node->next = node->prev = node;
+    if (!b || !(*b))
+        return ;
+    node = *b;
+    *b = node->next;    
+    if (*b)
+        (*b)->prev = NULL;  
+    node->next = NULL;
+    node->prev = NULL;
     ft_lstadd_front(a, node);
 }
 
@@ -246,7 +250,7 @@ void    load_list(t_list **list, char **argv, int argc)
     }
 }
 
-void    copy_list(t_list **list, t_list **new_list)
+/*void    copy_list(t_list **list, t_list **new_list)
 {
     t_list  *temp;
     t_list  *node;
@@ -263,7 +267,7 @@ void    copy_list(t_list **list, t_list **new_list)
         return;
     ft_lstadd_back(new_list, node);
     temp = temp->next;
-    while (temp != *list)
+    while (temp != NULL)
     {
         node = ft_create_node(temp->number);
         if (!node)
@@ -273,7 +277,7 @@ void    copy_list(t_list **list, t_list **new_list)
     }
 }
 
-/* Calculates duplicates and inversions at the same time */
+ Calculates duplicates and inversions at the same time 
 int check_duplicates(t_list *list)
 {
     t_list  *current;
@@ -293,7 +297,7 @@ int check_duplicates(t_list *list)
     {
         while (temp != list)
         {
-            /*printf("%dy%d:", current->number, temp->number);*/
+            /*printf("%dy%d:", current->number, temp->number);
             if (current->number == temp->number) 
             {
                 return (-1);
@@ -326,77 +330,37 @@ void apply_index(t_list **aux)
         index_aux++;
         temp = temp->next;
     }    
-}
+}*/
 
-int check_minimum(t_list **aux, t_list **b)
+void    apply_index(t_list **list)
 {
     t_list  *temp;
-    t_list  *min;
-    int n_mov = 0;
+    t_list  *temp_list;
+    t_list  *current;
+    int index;
 
-    while (*aux)
-    {
-        min = *aux;
-        temp = (*aux)->next;
-
-        while (temp != *aux)
+    temp = *list;  
+    current = *list;  
+    while (*list != NULL)
+    { 
+        index = 0;
+        temp_list = temp;
+        while (temp_list != NULL)
         {
-            if (temp->number < min->number)
+            if (temp_list->number < current->number)
             {
-                min = temp;
+                index++;
             }
-            temp = temp->next;
+            temp_list = temp_list->next;
         }
-        while ((*aux)->number != min->number)
-        {
-            ra(aux);  // rotate a
-            //write (1, "ra\n", 3);
-            n_mov++;
-        }            
-        pb(aux, b);
-        //write (1, "pb\n", 3);
-        n_mov++;
-    }   
-    while (*b)
-    {
-        pa(aux, b);
+        current->index = index;
+        *list = (*list)->next;
+        current = *list;
     }
-    apply_index(aux);
-    return(n_mov);
+    *list = temp;
 }
 
-void    save_index(t_list **a, t_list **aux)
-{
-    t_list *temp;
-    t_list *aux_temp;
-
-    temp = *a;
-    aux_temp = *aux;
-    while (aux_temp->next != *aux)
-    {
-        if (aux_temp->number == temp->number)
-        {
-            temp->index = aux_temp->index;
-        }
-        aux_temp = aux_temp->next;
-    }
-    if (aux_temp->number == temp->number)
-    {
-        temp->index = aux_temp->index;
-    }
-    temp = temp->next;
-    while (temp != *a)
-    {
-        if (temp->number == (*aux)->number)
-        {
-            temp->index = (*aux)->index;
-            temp = temp->next;
-        }
-        *aux = (*aux)->next;
-    }
-}
-
-void order_list(t_list **a, t_list **b)
+/*void order_list(t_list **a, t_list **b)
 {
     int size;
     t_list *temp;
@@ -443,7 +407,7 @@ void order_list(t_list **a, t_list **b)
             write(1, "pb\n", 3);
         }
     }        
-}
+}*/
 
 
 
@@ -467,12 +431,12 @@ int main(int argc, char **argv)
     {
         load_list(&list, argv, argc);
     }
-    if ((disorder = check_duplicates(list)) == -1)
+    /*if ((disorder = check_duplicates(list)) == -1)
     {
         printf("Error");
         return (1);
-        /* free list */
-    }
+        /* free list 
+    }*/
     printf("This is chaos:%d\n", disorder);
     /*int valid = check_valid(argv, argc);
     printf("%d\n", valid);*/
@@ -490,13 +454,6 @@ int main(int argc, char **argv)
     /*int n_mov = check_maximum(&list, &list3);*/
 
     /*printf("Number of movements: %d\n", n_mov);*/
-
-    copy_list(&list, &aux);
-    check_minimum(&aux, &list3);
-    save_index(&list, &aux);
-    order_list(&list, &list3);
-
-
 
     printf("New list:\n%d\n", list->number);
     printf("%d\n", list->next->number);
@@ -516,14 +473,25 @@ int main(int argc, char **argv)
     printf("%d\n", list->next->next->next->next->next->next->index);
     printf("%d\n", list->next->next->next->next->next->next->next->index);
 
-    printf("Second list:\n%d\n", aux->number);
-    printf("%d\n", aux->next->number);
-    printf("%d\n", aux->next->next->number);
-    printf("%d\n", aux->next->next->next->number);
-    printf("%d\n", aux->next->next->next->next->number);
-    printf("%d\n", aux->next->next->next->next->next->number);
-    printf("%d\n", aux->next->next->next->next->next->next->number);
-    printf("%d\n", aux->next->next->next->next->next->next->next->number);
+    apply_index(&list);
+
+    printf("New list:\n%d\n", list->index);
+    printf("%d\n", list->next->index);
+    printf("%d\n", list->next->next->index);
+    printf("%d\n", list->next->next->next->index);
+    printf("%d\n", list->next->next->next->next->index);
+    printf("%d\n", list->next->next->next->next->next->index);
+    printf("%d\n", list->next->next->next->next->next->next->index);
+    printf("%d\n", list->next->next->next->next->next->next->next->index);
+
+    /*printf("Second list:\n%d\n", list3->number);
+    printf("%d\n", list3->next->number);
+    printf("%d\n", list3->next->next->number);
+    printf("%d\n", list3->next->next->next->number);
+    printf("%d\n", list3->next->next->next->next->number);
+    printf("%d\n", list3->next->next->next->next->next->number);
+    printf("%d\n", list3->next->next->next->next->next->next->number);
+    printf("%d\n", list3->next->next->next->next->next->next->next->number);*/
 
     return (0);
 }
