@@ -301,7 +301,7 @@ int check_duplicates(t_list *list)
     {
         while (temp != list)
         {
-            /*printf("%dy%d:", current->number, temp->number);
+            printf("%dy%d:", current->number, temp->number);
             if (current->number == temp->number) 
             {
                 return (-1);
@@ -363,6 +363,33 @@ void    apply_index(t_list **list)
     }
     *list = temp;
 }
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int    calculate_lis(t_list *a)
+{
+    t_list *prev;
+    
+    int mx = 1;
+    prev = (a)->prev;
+    while (prev)
+    {
+        if (prev->index < a->index)
+        {
+            mx = max(mx, find_lis(prev) + 1);
+        }
+        prev = prev->prev;
+    }
+    return (mx);
+}
+
+t_list find_lis(t_list *a)
+{
+    
+}
+
 
 void order_list(t_list **a, t_list **b)
 {
@@ -462,7 +489,7 @@ int main(int argc, char **argv)
     {
         printf("Error");
         return (1);
-        /* free list 
+        free list 
     }*/
     printf("This is chaos:%d\n", disorder);
     /*int valid = check_valid(argv, argc);
