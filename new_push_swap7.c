@@ -368,7 +368,7 @@ int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
-int    calculate_lis(t_list *a)
+int    calculate_lis(t_list *a, int index)
 {
     t_list *prev;
     
@@ -378,18 +378,37 @@ int    calculate_lis(t_list *a)
     {
         if (prev->index < a->index)
         {
-            mx = max(mx, find_lis(prev) + 1);
+            mx = max(mx, (calculate_lis(prev, index)) + 1);
         }
         prev = prev->prev;
     }
     return (mx);
 }
 
-t_list find_lis(t_list *a)
+int find_lis(t_list *a)
 {
-    
-}
+    t_list *temp;
+    t_list *current;
+    int size;
+    int index;
+    int res;
 
+    res = 0;
+    size = 0;
+    index = 0;
+    temp = a;
+    current = a;
+    while (temp != NULL)
+    {
+        size++;
+    }
+    while (index < size)
+    {
+        if (current->index < current->next->index)
+            res = max(res, (calculate_lis(res, index)) + 1);
+    }
+    return (res);
+}
 
 void order_list(t_list **a, t_list **b)
 {
