@@ -8,11 +8,12 @@
 
 
 
+
         {
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "new_push_swap7",
+            "program": "new_push_swap8",
             "args": [],
             "cwd": "${workspaceRoot}"
         }

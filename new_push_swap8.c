@@ -260,68 +260,51 @@ int check_duplicates(t_list *list)
 {
     t_list  *current;
     t_list  *temp;
-    int inv;
-
-    if (!list)
-        return (-1);
-
-    if (list->next == list)
-        return 0;
 
     current = list;
-    temp = list->next;
-    inv = 0;
-    while (current->next != list)
+    while (current)
     {
-        while (temp != list)
+        temp = current->next;
+        while (temp)
         {
-            printf("%dy%d:", current->number, temp->number);
             if (current->number == temp->number) 
             {
-                return (-1);
-            }  
-            else if (current->number > temp->number) 
-            {
-                inv++;
-            }   
+                return (TRUE);
+            }
             temp = temp->next;
         }
         current = current->next;
-        temp = current->next;
     }
-    return (inv);
+    return (FALSE);
 }
 
-int    load_list(t_list **list, char **argv, int argc)
+int    load_list(t_list **list, char *new_argv)
 {
-    int i;
-    int j;
     int flag;
     int nbr;
     t_list  *node;
 
-    i = 1;
-    while (i < argc)
+    flag = 0;
+    while (*new_argv != '\0')
     {
-        j = 0;
-        flag = 0;
-        while (argv[i][j] != '\0')
+        if (((*new_argv >= '0' && *new_argv <= '9') || *new_argv == '-') && flag == 0)
         {
-            if (((argv[i][j] >= '0' && argv[i][j] <= '9') || argv[i][j] == '-') && flag == 0)
-            {
-                if (!valid_atoi(&argv[i][j], &nbr))
-                    return (0);
-                node = ft_create_node(nbr);
-                ft_lstadd_back(list, node);
-                flag = 1;
-            }
-            else if (argv[i][j] == ' ')
-               flag = 0; 
-            j++;
+            if (!valid_atoi(new_argv, &nbr))
+                return (FALSE);
+            node = ft_create_node(nbr);
+            ft_lstadd_back(list, node);
+            flag = 1;
+            if (*new_argv == '-')
+                new_argv++;
+            while (*new_argv >= '0' && *new_argv <= '9')
+                new_argv++;
+            continue;
         }
-        i++;
+        else if (*new_argv == ' ')
+            flag = 0; 
+        new_argv++;
     }
-    return (1);
+    return (TRUE);
 }
 
 void    apply_index(t_list **list)
@@ -517,7 +500,81 @@ int    re_order_list(t_list **a, t_list **b, int size)
     }
     return (n_mov);
 }
-            
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t			index;
+	unsigned char	*ptr_dest;
+	unsigned char	*ptr_src;
+
+	if (!dest && !src)
+	{
+		return (NULL);
+	}
+	ptr_dest = (unsigned char *)dest;
+	ptr_src = (unsigned char *)src;
+	index = 0;
+	while (index < n)
+	{
+		ptr_dest[index] = ptr_src[index];
+		index++;
+	}
+	return (dest);
+}
+
+char	*ft_realloc(char *ptr, size_t size, int n_char)
+{
+	char	*line;
+
+	line = malloc(sizeof(char) * size);
+	if (!line)
+		return (NULL);
+	if (ptr)
+	{
+		ft_memcpy(line, ptr, n_char);
+		free (ptr);
+		ptr = NULL;
+	}
+	return (line);
+}
+
+int ft_strlen(char *str)
+{
+    int index;
+
+    index = 0;
+    while (str[index] != '\0')
+    {
+        index++;
+    }
+    return (index);
+}
+
+char *join_arguments(char **argv, int argc)
+{
+    int index = 1;
+    int size;
+    int len = 0;
+    char *str = NULL;
+
+    while (index < argc)
+    {
+        size = ft_strlen(argv[index]);
+        str = ft_realloc(str, len + size + 2, len);
+        if (!str)
+            return (NULL);
+        ft_memcpy(str + len, argv[index], size);
+        len += size;
+
+        if (index < argc - 1)
+            str[len++] = ' ';
+
+        str[len] = '\0';
+        index++;
+    }
+    return (str);
+}
+
 int main(int argc, char **argv)
 {
     int index;
@@ -525,69 +582,46 @@ int main(int argc, char **argv)
     t_list  *aux = NULL;
     t_list  *list3 = NULL;
     t_list  *node;
-    int disorder = 0;
+    char *new_argv;
 
     index = 0;
     if (argc < 2)
     {
-        char *debug_argv[] = {"push_swap", "7 5 2 1 3 6 4 8", "9"};
+        char *debug_argv[] = {"push_swap", "7 5 2 1 3 6 4 8 7", "9"};
         argc = 2;
         argv = debug_argv;
     }
-    if (check_valid(argv, argc) == TRUE)
-    {
-        load_list(&list, argv, argc);
-    }
-    /*if ((disorder = check_duplicates(list)) == -1)
-    {
-        printf("Error");
+    if (check_valid(argv, argc) == FALSE)
         return (1);
-        free list 
-    }*/
-    printf("This is chaos:%d\n", disorder);
-    /*int valid = check_valid(argv, argc);
-    printf("%d\n", valid);*/
 
-    printf("%d\n", list->number);
-    printf("%d\n", list->next->number);
-    printf("%d\n", list->next->next->number);
-    printf("%d\n", list->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->number);
-
-    /*int check = check_duplicates(list);
-    printf("Duplicates:%d\n", check);
-    printf("Inversions:%d\n", inv);*/
-
-    /*int n_mov = check_maximum(&list, &list3);*/
-
-    /*printf("Number of movements: %d\n", n_mov);*/
-
-    printf("New list:\n%d\n", list->number);
-    printf("%d\n", list->next->number);
-    printf("%d\n", list->next->next->number);
-    printf("%d\n", list->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->next->next->number);
-    printf("%d\n", list->next->next->next->next->next->next->next->number);
-
-    apply_index(&list);
-    //order_list(&list, &list3);
-
-    printf("List with indexes:\n%d\n", list->index);
-    printf("%d\n", list->next->index);
-    printf("%d\n", list->next->next->index);
-    printf("%d\n", list->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->next->next->index);
+    new_argv = join_arguments(argv, argc);
+    if (load_list(&list, new_argv) == FALSE)
+    {
+        //free
+        return (1);
+    }
+    if (check_duplicates(list) == TRUE)
+    {
+        write(1, "Error\n", 6);
+        //free
+        return (1);
+    }
 
     aux = list;
-    printf("Numbers of list\n");
+    printf("Initial list:\n");
     while (aux != NULL)
     {
         printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    apply_index(&list);
+
+    aux = list;
+    printf("Indexes:\n");
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->index);
         aux = aux->next;
     }
 
@@ -601,7 +635,7 @@ int main(int argc, char **argv)
     
     int n_mov = order_list(&list, &list3);
 
-    printf("Nueva lista A:\n");
+    printf("List A after pushing numbers to B:\n");
     aux = list;
     while (aux != NULL)
     {
@@ -609,7 +643,7 @@ int main(int argc, char **argv)
         aux = aux->next;
     }
 
-    printf("Nueva lista B:\n");
+    printf("List B after pushing numbers to B:\n");
     aux = list3;
     while (aux != NULL)
     {
@@ -619,7 +653,7 @@ int main(int argc, char **argv)
 
     n_mov += re_order_list(&list, &list3, size);
 
-    printf("Segunda Nueva lista A:\n");
+    printf("List A after returning numbers from B:\n");
     aux = list;
     while (aux != NULL)
     {
@@ -627,7 +661,7 @@ int main(int argc, char **argv)
         aux = aux->next;
     }
 
-    printf("Segunda Nueva lista B:\n");
+    printf("List B after returning numbers from B:\n");
     aux = list3;
     while (aux != NULL)
     {
