@@ -12,6 +12,9 @@ typedef struct s_list
 {
     int number;
     int index;
+    int lis;
+    int in_lis;
+    struct s_list   *lis_start;
     struct s_list   *next;
     struct s_list   *prev;
 }   t_list;
@@ -54,6 +57,8 @@ t_list  *ft_create_node(int number)
         return (NULL);
     }
     node->number = number;
+    node->lis = 1;
+    node->in_lis = 0;
     node->next = NULL;
     node->prev = NULL;
     return (node);
@@ -171,7 +176,11 @@ void    ra(t_list **a)
 
 void    rb(t_list **b)
 {
-    *b = (*b)->next;    
+    t_list *temp;
+
+    temp = *b;
+    *b = (*b)->next;   
+    ft_lstadd_back(b, temp);  
     /*write(1, "rb\n", 3);*/
 }
 
@@ -188,10 +197,25 @@ void    rra(t_list **a)
     /*write(1, "rra\n", 4);*/
 }
 
-void    rrb(t_list **b)
+void rrb(t_list **b)
 {
-    *b = (*b)->prev;    
-    /*write(1, "rrb\n", 4);*/
+    t_list *tail;
+
+    if (!b || !(*b) || !(*b)->next) // lista vacía o un solo nodo
+        return;
+
+    tail = *b;
+    while (tail->next)          // buscar el último nodo
+        tail = tail->next;
+
+    // desconectar el tail
+    if (tail->prev)
+        tail->prev->next = NULL;
+
+    tail->prev = NULL;
+    tail->next = *b;
+    (*b)->prev = tail;
+    *b = tail;                  // actualizar head
 }
 
 void    rrr(t_list **a, t_list **b)
@@ -368,17 +392,184 @@ int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
-int    calculate_lis(t_list *a, int index)
+t_list *calculate_lis_end(t_list *a)
+{
+    t_list *current;
+    t_list *prev;
+    t_list *lis_end;
+    int max_len = 0;
+
+    current = a;
+    while (current)
+    {
+        prev = current->prev;
+        while (prev)
+        {
+            if (prev->index < current->index && current->lis < prev->lis + 1)
+            {
+                current->lis = prev->lis + 1;
+            }
+            prev = prev->prev;
+        }
+        if (current->lis > max_len)
+        {
+            max_len = current->lis;
+            lis_end = current;  // al final podemos reconstruir el LIS desde aquí
+        }
+        current = current->next;
+    }
+    return (lis_end);
+}
+
+t_list  *calculate_lis_start(t_list *a, t_list *lis_end)
+{
+    t_list *temp;
+    t_list *lis_start;
+
+    int index = lis_end->lis;
+
+    temp = lis_end;
+    while (index > 0 && temp)
+    {
+        if (index == temp->lis)
+        {
+            index--;
+            temp->in_lis = 1;
+            lis_start = temp;
+        }
+        temp = temp->prev;
+    }
+    return (lis_start);
+}
+
+int    list_size(t_list *list)
+{
+    t_list  *temp;
+    int size;
+
+    temp = list;
+    size = 0;
+    while (temp)
+    {
+        size++;
+        temp = temp->next;
+    }
+    return (size);
+}
+
+int    order_list(t_list **a, t_list **b)
+{
+    int size = list_size(*a);
+    int index = 0;
+    int n_mov = 0;
+
+    while (index < size)
+    {
+        if ((*a)->in_lis == 0)
+        {
+            pb(a, b);
+            write(1, "pb\n", 3);
+            n_mov++;
+        }
+        else
+        {
+            ra(a);
+            write(1, "ra\n", 3);
+            n_mov++;
+        } 
+        index++;
+    }
+    return (n_mov);
+}
+
+int rb_vs_rrb(t_list *b, int index)
+{
+    t_list *temp = b;
+    int n_rb = 0;
+    int size = 0;
+
+    // Contar tamaño de la lista
+    while (temp)
+    {
+        size++;
+        temp = temp->next;
+    }
+
+    // Contar cuántos pasos hacia arriba (rb) para llegar al index
+    temp = b;
+    n_rb = 0;
+    while (temp && temp->index != index)
+    {
+        n_rb++;
+        temp = temp->next;
+    }
+
+    int n_rrb = size - n_rb;
+
+    // Si hacer rb es más caro o igual, conviene rrb
+    return (n_rb >= n_rrb);
+}
+
+int    re_order_list(t_list **a, t_list **b, int size)
+{
+    int index = 0;
+    int n_mov = 0;
+    int n_rb = 0;
+
+    while (index < size)
+    {
+        if ((*a)->index == index)
+        {
+            ra(a);
+            write(1, "ra\n", 3);
+            index++;
+            n_mov++;
+            n_rb = rb_vs_rrb(*b, index);
+        }
+        else if (*b && (*b)->index == index)
+        {
+            pa(a, b);
+            write(1, "pa\n", 3);
+            ra(a);
+            write(1, "ra\n", 3);
+            index++;
+            n_mov++;
+            n_mov++;
+        }
+        else
+        {
+            if (n_rb == 0)
+            {
+                rb(b);
+                write(1, "rb\n", 3);
+            }
+            if (n_rb == 1)
+            {
+                rrb(b);
+                write(1, "rrb\n", 4);
+            }
+            n_mov++;
+        } 
+    }
+    return (n_mov);
+}
+            
+
+/*int    calculate_lis(t_list *a)
 {
     t_list *prev;
-    
-    int mx = 1;
+    int mx;
+    int val;
+
     prev = (a)->prev;
+    mx = 0;
     while (prev)
     {
         if (prev->index < a->index)
         {
-            mx = max(mx, (calculate_lis(prev, index)) + 1);
+            val = calculate_lis(prev) + 1;
+            if (val > mx)
+                mx = val;
         }
         prev = prev->prev;
     }
@@ -387,25 +578,18 @@ int    calculate_lis(t_list *a, int index)
 
 int find_lis(t_list *a)
 {
-    t_list *temp;
     t_list *current;
-    int size;
-    int index;
     int res;
+    int val;
 
     res = 0;
-    size = 0;
-    index = 0;
-    temp = a;
     current = a;
-    while (temp != NULL)
+    while (current)
     {
-        size++;
-    }
-    while (index < size)
-    {
-        if (current->index < current->next->index)
-            res = max(res, (calculate_lis(res, index)) + 1);
+        val = calculate_lis(current);
+        if (val > res)
+            res = val;
+        current = current->next;
     }
     return (res);
 }
@@ -440,7 +624,7 @@ void order_list(t_list **a, t_list **b)
     }
 }
 
-/*
+
     *a;
     size = 1;
     temp = temp->next;
@@ -496,7 +680,7 @@ int main(int argc, char **argv)
     index = 0;
     if (argc < 2)
     {
-        char *debug_argv[] = {"push_swap", "7 6 4 3 9 12 1 23", "5"};
+        char *debug_argv[] = {"push_swap", "342 581 109 204 603 475 888 1001 250 732 319 407 820 119 902 640 215 367 591 804 134 711 28 655 920 301 473 811 536 122 673 777 253 698 834 299 412 583 999 623 140 375 870 228 192 405 760 138 514 223 451 892 314 187 660 431 772 219 274 907 311 684 529 61 744 206 816 221 593 487 739 205 665 831 478 906 302 154 839 317 997 630 284 775 418 543 699 810 261 383 922 156 471 318 802 267 901 432 589 773 150 621 886 444"};
         argc = 2;
         argv = debug_argv;
     }
@@ -537,19 +721,10 @@ int main(int argc, char **argv)
     printf("%d\n", list->next->next->next->next->next->next->number);
     printf("%d\n", list->next->next->next->next->next->next->next->number);
 
-    printf("New list:\n%d\n", list->index);
-    printf("%d\n", list->next->index);
-    printf("%d\n", list->next->next->index);
-    printf("%d\n", list->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->next->index);
-    printf("%d\n", list->next->next->next->next->next->next->next->index);
-
     apply_index(&list);
-    order_list(&list, &list3);
+    //order_list(&list, &list3);
 
-    printf("New list:\n%d\n", list->index);
+    printf("List with indexes:\n%d\n", list->index);
     printf("%d\n", list->next->index);
     printf("%d\n", list->next->next->index);
     printf("%d\n", list->next->next->next->index);
@@ -558,14 +733,59 @@ int main(int argc, char **argv)
     printf("%d\n", list->next->next->next->next->next->next->index);
     printf("%d\n", list->next->next->next->next->next->next->next->index);
 
-    /*printf("Second list:\n%d\n", list3->number);
-    printf("%d\n", list3->next->number);
-    printf("%d\n", list3->next->next->number);
-    printf("%d\n", list3->next->next->next->number);
-    printf("%d\n", list3->next->next->next->next->number);
-    printf("%d\n", list3->next->next->next->next->next->number);
-    printf("%d\n", list3->next->next->next->next->next->next->number);
-    printf("%d\n", list3->next->next->next->next->next->next->next->number);*/
+    aux = list;
+    printf("Numbers of list\n");
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    t_list *lis_end = calculate_lis_end(list);
+    printf("End node: %d\n", lis_end->number);
+
+    t_list *lis_start = calculate_lis_start(list, lis_end);
+    printf("Start node: %d\n", lis_start->number);
+
+    int size = list_size(list);
+    
+    int n_mov = order_list(&list, &list3);
+
+    printf("Nueva lista A:\n");
+    aux = list;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    printf("Nueva lista B:\n");
+    aux = list3;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    n_mov += re_order_list(&list, &list3, size);
+
+    printf("Segunda Nueva lista A:\n");
+    aux = list;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    printf("Segunda Nueva lista B:\n");
+    aux = list3;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    printf("Movimientos:%d\n", n_mov);
 
     return (0);
 }
