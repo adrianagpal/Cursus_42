@@ -122,20 +122,20 @@ void    swap(t_list **list)
 void    sa(t_list **a)
 {
     swap(a);
-    /*write(1, "sa\n", 3);*/
+    write(1, "sa\n", 3);
 }
 
 void    sb(t_list **b)
 {
     swap(b);
-    /*write(1, "sb\n", 3);*/
+    write(1, "sb\n", 3);
 }
 
 void    ss(t_list **a, t_list **b)
 {
     swap(a);
     swap(b);
-    /*write(1, "ss\n", 3);*/
+    write(1, "ss\n", 3);
 }
 
 void    push(t_list **a, t_list **b)
@@ -156,13 +156,13 @@ void    push(t_list **a, t_list **b)
 void    pa(t_list **a, t_list **b)
 {
     push(a, b);
-    /*write(1, "pa\n", 3);*/
+    write(1, "pa\n", 3);
 }
 
 void    pb(t_list **a, t_list **b)
 {
     push(b, a);
-    /*write(1, "pb\n", 3);*/
+    write(1, "pb\n", 3);
 }
 
 void    ra(t_list **a, t_list **b)
@@ -172,7 +172,7 @@ void    ra(t_list **a, t_list **b)
     temp = *a;
     *a = (*a)->next;   
     ft_lstadd_back(a, temp); 
-    /*write(1, "ra\n", 3);*/
+    write(1, "ra\n", 3);
 }
 
 void    rb(t_list **a, t_list **b)
@@ -182,14 +182,21 @@ void    rb(t_list **a, t_list **b)
     temp = *b;
     *b = (*b)->next;   
     ft_lstadd_back(b, temp);  
-    /*write(1, "rb\n", 3);*/
+    write(1, "rb\n", 3);
 }
 
 void    rr(t_list **a, t_list **b)
 {
-    ra(a, b);
-    rb(a, b);  
-    /*write(1, "rr\n", 3);*/
+    t_list *temp_a;
+    t_list *temp_b;
+
+    temp_a = *a;
+    temp_b = *b;
+    *a = (*a)->next; 
+    *b = (*b)->next;   
+    ft_lstadd_back(a, temp_a);       
+    ft_lstadd_back(b, temp_b); 
+    write(1, "rr\n", 3);
 }
 
 void    rra(t_list **a, t_list **b)
@@ -198,19 +205,17 @@ void    rra(t_list **a, t_list **b)
 
     if (!a || !(*a) || !(*a)->next) // lista vacía o un solo nodo
         return;
-
     tail = *a;
     while (tail->next)          // buscar el último nodo
         tail = tail->next;
-
     // desconectar el tail
     if (tail->prev)
         tail->prev->next = NULL;
-
     tail->prev = NULL;
     tail->next = *a;
     (*a)->prev = tail;
     *a = tail;                  // actualizar head
+    write(1, "rra\n", 4);
 }
 
 void rrb(t_list **a, t_list **b)
@@ -219,15 +224,49 @@ void rrb(t_list **a, t_list **b)
 
     if (!b || !(*b) || !(*b)->next) // lista vacía o un solo nodo
         return;
-
     tail = *b;
     while (tail->next)          // buscar el último nodo
         tail = tail->next;
-
     // desconectar el tail
     if (tail->prev)
         tail->prev->next = NULL;
+    tail->prev = NULL;
+    tail->next = *b;
+    (*b)->prev = tail;
+    *b = tail;                  // actualizar head
+    write(1, "rrb\n", 4);
+}
 
+void    rra_no_print(t_list **a, t_list **b)
+{
+    t_list *tail;
+
+    if (!a || !(*a) || !(*a)->next) // lista vacía o un solo nodo
+        return;
+    tail = *a;
+    while (tail->next)          // buscar el último nodo
+        tail = tail->next;
+    // desconectar el tail
+    if (tail->prev)
+        tail->prev->next = NULL;
+    tail->prev = NULL;
+    tail->next = *a;
+    (*a)->prev = tail;
+    *a = tail;                  // actualizar head
+}
+
+void rrb_no_print(t_list **a, t_list **b)
+{
+    t_list *tail;
+
+    if (!b || !(*b) || !(*b)->next) // lista vacía o un solo nodo
+        return;
+    tail = *b;
+    while (tail->next)          // buscar el último nodo
+        tail = tail->next;
+    // desconectar el tail
+    if (tail->prev)
+        tail->prev->next = NULL;
     tail->prev = NULL;
     tail->next = *b;
     (*b)->prev = tail;
@@ -236,9 +275,9 @@ void rrb(t_list **a, t_list **b)
 
 void    rrr(t_list **a, t_list **b)
 {
-    *a = (*a)->prev; 
-    *b = (*b)->prev;    
-    /*write(1, "rrr\n", 4);*/
+    rra_no_print(a, b);
+    rrb_no_print(a, b);
+    write(1, "rrr\n", 4);
 }
 
 void free_list(t_list *list)
@@ -517,12 +556,10 @@ int    keep_lis_in_a(t_list **a, t_list **b)
         if ((*a)->in_lis == 0)
         {
             pb(a, b);
-            write(1, "pb\n", 3);
         }
         else
         {
             ra(a, NULL);
-            write(1, "ra\n", 3);
         } 
         n_mov++;
         index++;
@@ -628,220 +665,145 @@ t_list  *find_cheapest_node(t_list *b)
     return (cheapest);
 }
 
-void    push_back_to_b(t_list **a, t_list **b)
-{
-    t_list *cheapest;
-
-    while (*b)
-    {
-        cheapest = find_cheapest_node(*b);
-        if (cheapest->cost_b >= 0)
-            rb(a, b);
-        if (cheapest->cost_b < 0)
-            rrb(a, b);
-        if (cheapest->cost_a >= 0)
-            ra(a, b);
-        if (cheapest->cost_a < 0)
-            rra(a, b);
-
-    }
-}
-
-void apply_rotations(t_list **a, t_list **b, t_list *node)
+/*void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov)
 {
     while (node->cost_a > 0 && node->cost_b > 0)
     {
         rr(a, b);
         node->cost_a--;
         node->cost_b--;
-        printf("rr\n");
+        (*n_mov)++;
     }
     while (node->cost_a < 0 && node->cost_b < 0)
     {
         rrr(a, b);
         node->cost_a++;
         node->cost_b++;
-        printf("rrr\n");
+        (*n_mov)++;
     }
+}
 
+void rotate_single(t_list **a, t_list **b, t_list *node, int *n_mov)
+{
     while (node->cost_a > 0)
     {
         ra(a, b);
         node->cost_a--;
-        printf("ra\n");
+        (*n_mov)++;
     }
     while (node->cost_a < 0)
     {
         rra(a, b);
         node->cost_a++;
-        printf("rra\n");
+        (*n_mov)++;
     }
     while (node->cost_b > 0)
     {
         rb(a, b);
         node->cost_b--;
-        printf("rb\n");
+        (*n_mov)++;
     }
     while (node->cost_b < 0)
     {
         rrb(a, b);
         node->cost_b++;
-        printf("rrb\n");
+        (*n_mov)++;
     }
-    pa(a, b);
-    printf("pa\n");
 }
 
-void reinsertion(t_list **a, t_list **b)
+void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov)
+{
+    rotate_both(a, b, node, n_mov);
+    rotate_single(a, b, node, n_mov);
+    pa(a, b);
+    (*n_mov)++;
+}*/
+
+void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov)
+{
+    while (node->cost_a > 0 && node->cost_b > 0) 
+    { 
+        rr(a, b); 
+        node->cost_a--; 
+        node->cost_b--; 
+        n_mov++; 
+    } 
+    while (node->cost_a < 0 && node->cost_b < 0) 
+    { 
+        rrr(a, b); 
+        node->cost_a++; 
+        node->cost_b++; 
+        n_mov++; 
+    } 
+    while (node->cost_a > 0) 
+    { 
+        ra(a, b); 
+        node->cost_a--; 
+        n_mov++; 
+    } 
+    while (node->cost_a < 0) 
+    { 
+        rra(a, b); 
+        node->cost_a++; 
+        n_mov++; 
+    } 
+    while (node->cost_b > 0) 
+    { 
+        rb(a, b); 
+        node->cost_b--; 
+        n_mov++; 
+    } 
+    while (node->cost_b < 0) 
+    { 
+        rrb(a, b); 
+        node->cost_b++; 
+        n_mov++; 
+    } 
+    pa(a, b); 
+    n_mov++;
+}
+void    reinsertion(t_list **a, t_list **b, int *n_mov)
 {
     while (*b)
     {
         apply_costs(*a, *b);                  // actualizar costes
         t_list *node = find_cheapest_node(*b);   // nodo más barato
-        apply_rotations(a, b, node);        // mover nodo y push a A
+        apply_rotations(a, b, node, n_mov);        // mover nodo y push a A
     }
 }
 
-
-
-/*void    copy_list(t_list *list, t_list **new_list)
+void    return_a_to_origin(t_list **a, int *n_mov)
 {
-    t_list  *temp;
-    t_list  *node;
+    t_list *temp;
+    int cost_ra;
+    int cost_rra;
 
-    *new_list = NULL;
-
-    if (!list)
-        return;
-    temp = list;
-    while (temp)
+    temp = *a;
+    cost_ra = 0;
+    cost_rra = 0;
+    while (temp && temp->index != 0)
     {
-        node = ft_create_node(temp->number);
-        if (!node)
-        {
-            free_list(list);
-            return;
-        }
-        node->index = temp->index;
-        ft_lstadd_back(new_list, node);
+        cost_ra++;
         temp = temp->next;
     }
-}
-
-int min_index(int *movs_count, int size) 
-{
-    int index = 0;
-    int min = 0;
-
-    while (index < size)
+    cost_rra = list_size(*a) - cost_ra;
+    if (cost_ra <= cost_rra)
     {
-        if (movs_count[index] < movs_count[min])
-            min = index;
-        index++;        
+        while(cost_ra-- > 0)
+        {
+            ra(a, NULL);
+            (*n_mov)++;
+        }    
     }
-    return (min);
-}
-
-int best_movement(t_list *a, t_list *b, int index)
-{
-    t_list *new_a;
-    t_list *new_b;
-    int n_mov;
-    int mov_index = 0;
-    void (*movs[6])(t_list **, t_list **) = {ra, rb, rr, rra, rrb, rrr};
-    int movs_count[6];
-
-    while (mov_index < 6)
+    else
     {
-        new_a = NULL;
-        new_b = NULL;
-        copy_list(a, &new_a);
-        copy_list(b, &new_b);
-
-        n_mov = 0;
-        int max_iter = list_size(new_a) + list_size(new_b) + 10;
-
-        while (new_b->index != index)
+        while(cost_rra-- > 0)
         {
-            movs[mov_index](&new_a, &new_b);
-            n_mov++;
-        }
-
-        movs_count[mov_index] = n_mov;
-        free_list(new_a);
-        free_list(new_b);
-
-        mov_index++;
+            rra(a, NULL);
+            (*n_mov)++;
+        }      
     }
-    return (min_index(movs_count, 6));
 }
-
-int    re_order_list(t_list **a, t_list **b, int size)
-{
-    int index = 0;
-    int n_mov = 0;
-    int n_rb = 0;
-    int best;
-
-    while (index < size)
-    {
-        if ((*a)->index == index)
-        {
-            ra(a, b);
-            write(1, "ra\n", 3);
-            n_mov++;
-        }
-        else if (*b && (*b)->index == index)
-        {
-            pa(a, b);
-            write(1, "pa\n", 3);
-            ra(a, b);
-            write(1, "ra\n", 3);
-            n_mov++;
-            n_mov++;
-        }
-        else if (*b)
-        {
-            best = best_movement(*a, *b, index);
-            while (*b && index != (*b)->index)
-            {
-                if (best == 0)
-                {
-                    ra(a, b);
-                    write(1, "ra\n", 3);
-                }
-                else if (best == 1)
-                {
-                    rb(a, b);
-                    write(1, "rb\n", 3);
-                }
-                else if (best == 2)
-                {
-                    rr(a, b);
-                    write(1, "rr\n", 3);
-                }
-                else if (best == 3)
-                {
-                    rra(a, b);
-                    write(1, "rra\n", 4);
-                }
-                else if (best == 4)
-                {
-                    rrb(a, b);
-                    write(1, "rrb\n", 4);
-                }
-                else if (best == 5)
-                {
-                    rrr(a, b);
-                    write(1, "rrr\n", 4);
-                }
-                n_mov++;
-            }
-        } 
-        index++;
-    }
-    return (n_mov);
-}*/
 
 int main(int argc, char **argv)
 {
@@ -855,7 +817,7 @@ int main(int argc, char **argv)
     index = 0;
     if (argc < 2)
     {
-        char *debug_argv[] = {"push_swap", "7 5 2 1 3 6 4 8", "9"};
+        char *debug_argv[] = {"push_swap", "42 7 89 13 56 21 78 3 91 34 65 12 88 27 54 6 73 19 84 2 97 45 68 23 51 9 76 30 82 14 60 1 95 38 71 25 53 11 86 4 79 33 66 18 90 47 70 28 55 8 99 36 62 16 83 5 77 41 64 20 92 31 58 10 87 44 69 22 50 15 93 39 72 26 57 17 80 35 61 24 94 40 67 29 52 43 74 32 63 46 81 37 59 48 75 49 85 96 98 100"};
         argc = 2;
         argv = debug_argv;
     }
@@ -903,6 +865,8 @@ int main(int argc, char **argv)
     
     int n_mov = keep_lis_in_a(&list, &list3);
 
+    printf("Movimientos:%d\n", n_mov);
+
     printf("List A after pushing numbers to B:\n");
     aux = list;
     while (aux != NULL)
@@ -921,7 +885,9 @@ int main(int argc, char **argv)
 
     //n_mov += re_order_list(&list, &list3, size);
 
-    reinsertion(&list, &list3);
+    reinsertion(&list, &list3, &n_mov);
+
+    return_a_to_origin(&list, &n_mov);
 
     printf("List A after returning numbers from B:\n");
     aux = list;
