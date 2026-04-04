@@ -1,121 +1,82 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "push_swap_library.h"
+#include "push_swap.h"
 
-/*typedef struct t_list
+t_list  *ft_create_node(int number)
 {
-    void    *content;
-    struct t_list    *next;
-}   s_list;*/
-
-s_list  *create_node(int *content)
-{
-    s_list  *node;
-
-    node = malloc(sizeof(s_list));
+    t_list  *node;
+    
+    node = malloc(sizeof(t_list));
     if (!node)
     {
         return (NULL);
     }
-    node->content = *content;
+    node->number = number;
+    node->lis = 1;
+    node->in_lis = 0;
     node->next = NULL;
+    node->prev = NULL;
     return (node);
 }
 
-s_list  *ft_lstlast(s_list *list)
+void    ft_lstadd_back(t_list **list, t_list *new)
 {
-    s_list  *temp;
+    t_list *last;
 
-    if (!list)
+    if (!list || !new)
     {
-        return (NULL);
+        return ;
     }
-    temp = list;
-    while (temp != NULL)
+    new->next = NULL;
+    if (!(*list))
     {
-        if (temp->next == NULL || temp->next == list)
-        {
-            return (temp);
-        }
+        *list = new;
+        new->prev = NULL;
+        return ;
+    }
+    last = *list;
+    while (last->next != NULL)
+        last = last->next;
+    last->next = new;
+    new->prev = last;
+}
+
+void    ft_lstadd_front(t_list **list, t_list *new)
+{
+    if (!list || !new)
+    {
+        return ;
+    }
+    new->prev = NULL;
+    new->next = *list;
+    if (*list)
+        (*list)->prev = new;
+    *list = new;
+}
+
+int    list_size(t_list *list)
+{
+    t_list  *temp;
+    int size;
+
+    temp = list;
+    size = 0;
+    while (temp)
+    {
+        size++;
         temp = temp->next;
     }
-    return (NULL);
+    return (size);
 }
 
-void    ft_lstadd_back(s_list **list, s_list *node)
+void free_list(t_list *list)
 {
-    s_list  *last;
+    t_list *temp;
+    t_list *next;
 
-    if (!list || !node)
+    while (list)
     {
-        return ;
+        next = list->next;
+        free(list);
+        list = next;
     }
-    if (*list == NULL)
-    {
-        *list = node;
-        return ;
-    }
-    last = ft_lstlast(*list);
-    last->next = node;
 }
-
-s_list  *array_to_list(int *stack, size_t size)
-{
-    s_list  *list;
-    s_list  *node;
-    size_t index;
-
-    if (!stack || size == 0)
-        return (NULL);
-    index = 0;
-    list = NULL;
-    while (index < size)
-    {
-        node = create_node(&stack[index]);
-        ft_lstadd_back(&list, node);
-        index++;
-    }
-    return (list);
-}
-
-/*int main(void)
-{
-    s_list  *list;
-    s_list  *list2;
-    s_list  *node1;
-    s_list  *node2;
-    s_list  *node3;
-    s_list  *node4;
-    s_list  *last;
-
-    int num1 = 32;
-    int num2 = 5;
-    int num3 = 68;
-    int num4 = 122;
-
-    node1 = create_node(&num1);
-    node2 = create_node(&num2);
-    node3 = create_node(&num3);
-    node4 = create_node(&num4);
-
-    list = node1;
-    ft_lstadd_back(&list, node2);
-    ft_lstadd_back(&list, node3);
-
-    printf("%d", list->content);
-
-    int    arr[5];
-    int index = 0;
-
-    arr[0] = 4;
-    arr[1] = 2;
-    arr[2] = 1;
-    arr[3] = 6;
-    arr[4] = 8;
-
-    list2 = array_to_list(arr, 5);
-
-    Hay que hacerlo así porque printf recorre la lista hasta que encuentra un |0 e imprime toda la lista
-    printf("%d", list2->content);
-}*/
 
