@@ -56,11 +56,14 @@ int check_duplicates(t_list *list)
 
 char *join_arguments(char **argv, int argc)
 {
-    int index = 1;
+    int index;
     int size;
-    int len = 0;
-    char *str = NULL;
+    int len;
+    char *str;
 
+    index = 1;
+    len = 0;
+    str = NULL;
     while (index < argc)
     {
         size = ft_strlen(argv[index]);

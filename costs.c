@@ -3,11 +3,14 @@
 int    cost_b(t_list *b, t_list *node)
 {
     t_list *temp;
-    int size = list_size(b);
-    int cost_rb = 0;
-    int cost_rrb = 0;
+    int size;
+    int cost_rb;
+    int cost_rrb;
 
     temp = b;
+    size = list_size(b);
+    cost_rb = 0;
+    cost_rrb = 0;
     while (temp && temp != node)
     {
         cost_rb++;
@@ -29,7 +32,6 @@ int max_index(t_list *list)
 
     if (!list)
         return -1; // lista vacía, devuelvo -1 como indicador
-
     max = list->idx;
     temp = list;
     while (temp)
@@ -48,7 +50,6 @@ int min_index(t_list *list)
 
     if (!list)
         return -1; // lista vacía, devuelvo -1 como indicador
-
     min = list->idx;
     temp = list;
     while (temp)
@@ -111,7 +112,9 @@ int cost_a(t_list *a, t_list *node)
 
 void    apply_costs(t_list *a, t_list *b)
 {
-    t_list *temp = b;
+    t_list *temp;
+
+    temp = b;
     while (temp)
     {
         temp->cost_a = cost_a(a, temp);
@@ -134,11 +137,13 @@ t_list  *find_cheapest_node(t_list *b)
 {
     t_list *temp;
     t_list *cheapest;
-    int total_cost = 0;
-    int cheapest_cost = 0;
+    int total_cost;
+    int cheapest_cost;
 
     temp = b;
     cheapest = b;
+    total_cost = 0;
+    cheapest_cost = 0;
     while (temp)
     {
         total_cost = total_moves(temp->cost_a, temp->cost_b);

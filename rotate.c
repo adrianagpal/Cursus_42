@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-void    ra(t_list **a, t_list **b)
+void    ra(t_list **a, int *n_mov)
 {
     t_list *temp;
 
@@ -8,9 +8,10 @@ void    ra(t_list **a, t_list **b)
     *a = (*a)->next;   
     ft_lstadd_back(a, temp); 
     write(1, "ra\n", 3);
+    (*n_mov)++;
 }
 
-void    rb(t_list **a, t_list **b)
+void    rb(t_list **b, int *n_mov)
 {
     t_list *temp;
 
@@ -18,9 +19,10 @@ void    rb(t_list **a, t_list **b)
     *b = (*b)->next;   
     ft_lstadd_back(b, temp);  
     write(1, "rb\n", 3);
+    (*n_mov)++;
 }
 
-void    rr(t_list **a, t_list **b)
+void    rr(t_list **a, t_list **b, int *n_mov)
 {
     t_list *temp_a;
     t_list *temp_b;
@@ -32,4 +34,5 @@ void    rr(t_list **a, t_list **b)
     ft_lstadd_back(a, temp_a);       
     ft_lstadd_back(b, temp_b); 
     write(1, "rr\n", 3);
+    (*n_mov)++;
 }

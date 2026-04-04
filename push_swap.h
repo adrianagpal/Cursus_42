@@ -56,27 +56,34 @@ void    apply_costs(t_list *a, t_list *b);
 int total_moves(int cost_a, int cost_b);
 t_list  *find_cheapest_node(t_list *b);
 
+/* ROTATIONS */
+void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov);
+void rotate_single(t_list **a, t_list **b, t_list *node, int *n_mov);
+void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov);
+void    reinsertion(t_list **a, t_list **b, int *n_mov);
+void    return_a_to_origin(t_list **a, t_list **b, int *n_mov);
+
 /* SWAP */
 void    swap(t_list **list);
-void    sa(t_list **a);
-void    sb(t_list **b);
-void    ss(t_list **a, t_list **b);
+void    sa(t_list **a, int *n_mov);
+void    sb(t_list **b, int *n_mov);
+void    ss(t_list **a, t_list **b, int *n_mov);
 
 /* PUSH */
 void    push(t_list **a, t_list **b);
-void    pa(t_list **a, t_list **b);
-void    pb(t_list **a, t_list **b);
+void    pa(t_list **a, t_list **b, int *n_mov);
+void    pb(t_list **a, t_list **b, int *n_mov);
 
 /* ROTATE */
-void    ra(t_list **a, t_list **b);
-void    rb(t_list **a, t_list **b);
-void    rr(t_list **a, t_list **b);
+void    ra(t_list **a, int *n_mov);
+void    rb(t_list **a, int *n_mov);
+void    rr(t_list **a, t_list **b, int *n_mov);
 
 /* REVERSE ROTATE */
-void    rra(t_list **a, t_list **b);
-void rrb(t_list **a, t_list **b);
-void    rra_no_print(t_list **a, t_list **b);
-void rrb_no_print(t_list **a, t_list **b);
-void    rrr(t_list **a, t_list **b);
+void    rra(t_list **a, int *n_mov);
+void rrb(t_list **b, int *n_mov);
+void    rra_no_print(t_list **a);
+void rrb_no_print(t_list **b);
+void    rrr(t_list **a, t_list **b, int *n_mov);
 
 #endif

@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-void    rra(t_list **a, t_list **b)
+void    rra(t_list **a, int *n_mov)
 {
     t_list *tail;
 
@@ -17,9 +17,10 @@ void    rra(t_list **a, t_list **b)
     (*a)->prev = tail;
     *a = tail;                  // actualizar head
     write(1, "rra\n", 4);
+    (*n_mov)++;
 }
 
-void rrb(t_list **a, t_list **b)
+void rrb(t_list **b, int *n_mov)
 {
     t_list *tail;
 
@@ -36,9 +37,10 @@ void rrb(t_list **a, t_list **b)
     (*b)->prev = tail;
     *b = tail;                  // actualizar head
     write(1, "rrb\n", 4);
+    (*n_mov)++;
 }
 
-void    rra_no_print(t_list **a, t_list **b)
+void    rra_no_print(t_list **a)
 {
     t_list *tail;
 
@@ -56,7 +58,7 @@ void    rra_no_print(t_list **a, t_list **b)
     *a = tail;                  // actualizar head
 }
 
-void rrb_no_print(t_list **a, t_list **b)
+void rrb_no_print(t_list **b)
 {
     t_list *tail;
 
@@ -74,9 +76,10 @@ void rrb_no_print(t_list **a, t_list **b)
     *b = tail;                  // actualizar head
 }
 
-void    rrr(t_list **a, t_list **b)
+void    rrr(t_list **a, t_list **b, int *n_mov)
 {
-    rra_no_print(a, b);
-    rrb_no_print(a, b);
+    rra_no_print(a);
+    rrb_no_print(b);
     write(1, "rrr\n", 4);
+    (*n_mov)++;    
 }

@@ -1,20 +1,22 @@
 #include "push_swap.h"
+
 void    keep_lis_in_a(t_list **a, t_list **b, int *n_mov)
 {
-    int size = list_size(*a);
-    int index = 0;
+    int size;
+    int index;
 
+    size = list_size(*a);
+    index = 0;
     while (index < size)
     {
         if ((*a)->in_lis == 0)
         {
-            pb(a, b);
+            pb(a, b, n_mov);
         }
         else
         {
-            ra(a, NULL);
+            ra(a, n_mov);
         } 
-        (*n_mov)++;
         index++;
     }
 }

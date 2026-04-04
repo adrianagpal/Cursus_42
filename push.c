@@ -15,14 +15,16 @@ void    push(t_list **a, t_list **b)
     ft_lstadd_front(a, node);
 }
 
-void    pa(t_list **a, t_list **b)
+void    pa(t_list **a, t_list **b, int *n_mov)
 {
     push(a, b);
     write(1, "pa\n", 3);
+    (*n_mov)++;
 }
 
-void    pb(t_list **a, t_list **b)
+void    pb(t_list **a, t_list **b, int *n_mov)
 {
     push(b, a);
     write(1, "pb\n", 3);
+    (*n_mov)++;
 }

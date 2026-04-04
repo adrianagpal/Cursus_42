@@ -19,21 +19,24 @@ void    swap(t_list **list)
     *list = second;
 }
 
-void    sa(t_list **a)
+void    sa(t_list **a, int *n_mov)
 {
     swap(a);
     write(1, "sa\n", 3);
+    (*n_mov)++;
 }
 
-void    sb(t_list **b)
+void    sb(t_list **b, int *n_mov)
 {
     swap(b);
     write(1, "sb\n", 3);
+    (*n_mov)++;
 }
 
-void    ss(t_list **a, t_list **b)
+void    ss(t_list **a, t_list **b, int *n_mov)
 {
     swap(a);
     swap(b);
     write(1, "ss\n", 3);
+    (*n_mov)++;
 }
