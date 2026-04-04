@@ -14,7 +14,7 @@ typedef enum
 typedef struct s_list
 {
     int number;
-    int index;
+    int idx;
     int lis;
     int in_lis;
     int cost_a;
@@ -46,9 +46,7 @@ int abs(int n);
 int max(int a, int b) ;
 
 /* CALCULATE LIS */
-t_list *calculate_lis_end(t_list *a);
-t_list  *calculate_lis_start(t_list *a, t_list *lis_end);
-int    keep_lis_in_a(t_list **a, t_list **b);
+void    keep_lis_in_a(t_list **a, t_list **b, int *n_mov);
 void    apply_index(t_list **list);
 
 /* CALCULATE COSTS */

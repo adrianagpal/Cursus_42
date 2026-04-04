@@ -116,7 +116,7 @@ void    return_a_to_origin(t_list **a, int *n_mov)
     temp = *a;
     cost_ra = 0;
     cost_rra = 0;
-    while (temp && temp->index != 0)
+    while (temp && temp->idx != 0)
     {
         cost_ra++;
         temp = temp->next;
@@ -145,13 +145,14 @@ int main(int argc, char **argv)
     t_list  *list = NULL;
     t_list  *aux = NULL;
     t_list  *list3 = NULL;
+    int n_mov;
     char *new_argv;
 
     /*if (argc == 1)
         return (0);*/
     if (argc < 2)
     {
-        char *debug_argv[] = {"push_swap", "0 2 6 45 38 7 22 42 11 1"};
+        char *debug_argv[] = {"push_swap", "89 45 1 2"};
         argc = 2;
         argv = debug_argv;
     }
@@ -175,14 +176,8 @@ int main(int argc, char **argv)
     }
 
     apply_index(&list);
-
-    t_list *lis_end = calculate_lis_end(list);
-    printf("End node: %d\n", lis_end->number);
-
-    t_list *lis_start = calculate_lis_start(list, lis_end);
-    printf("Start node: %d\n", lis_start->number);
     
-    int n_mov = keep_lis_in_a(&list, &list3);
+    keep_lis_in_a(&list, &list3, &n_mov);
 
     printf("Movimientos:%d\n", n_mov);
 

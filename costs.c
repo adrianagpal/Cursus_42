@@ -30,12 +30,12 @@ int max_index(t_list *list)
     if (!list)
         return -1; // lista vacía, devuelvo -1 como indicador
 
-    max = list->index;
+    max = list->idx;
     temp = list;
     while (temp)
     {
-        if (temp->index > max)
-            max = temp->index;
+        if (temp->idx > max)
+            max = temp->idx;
         temp = temp->next;
     }
     return (max);
@@ -49,12 +49,12 @@ int min_index(t_list *list)
     if (!list)
         return -1; // lista vacía, devuelvo -1 como indicador
 
-    min = list->index;
+    min = list->idx;
     temp = list;
     while (temp)
     {
-        if (temp->index < min)
-            min = temp->index;
+        if (temp->idx < min)
+            min = temp->idx;
         temp = temp->next;
     }
     return (min);
@@ -82,48 +82,31 @@ t_list	*ft_lstlast(t_list *lst)
 
 int cost_a(t_list *a, t_list *node)
 {
-    t_list *temp;
-    t_list *prev;
-    int size = list_size(a);
-    int cost_ra = 0;
-    int cost_rra = 0;
+    t_list *tmp;
+    t_list *prv;
+    int cost_ra;
+    int cost_rra;
 
     if (!a)
-        return 0;
-
-    // Inicializamos temp y prev
-    temp = a;
-    prev = a;
-    while (prev->next)
-        prev = prev->next;
-
-    int max_idx = max_index(a);
-
-    // Caso especial: node es el máximo
-    if (node->index > max_idx && prev->index == max_idx)
-        return 0;
-
-    // Caso especial: node es el mínimo y prev es máximo
-    if (prev->index == max_idx && node->index == 0)
-        return 0;
-
-    // Flujo normal
-    while (temp && !(node->index < temp->index && node->index > prev->index))
+        return (0);
+    cost_ra = 0;
+    tmp = a;
+    prv = ft_lstlast(a);
+    while (tmp)
     {
+        if (prv->idx < node->idx && node->idx < tmp->idx)
+            break;
+        if (prv->idx > tmp->idx && (node->idx > prv->idx || node->idx < tmp->idx))
+            break;
         cost_ra++;
-        prev = temp;       // <--- actualizar prev antes de avanzar temp
-        temp = temp->next;
+        prv = tmp;
+        tmp = tmp->next;
     }
-
-    if (!temp)
-        cost_ra = 0;
-
-    cost_rra = size - cost_ra;
-
+    cost_rra = list_size(a) - cost_ra;
     if (cost_ra > cost_rra)
-        return -cost_rra;
+        return (-cost_rra);
     else
-        return cost_ra;
+        return (cost_ra);
 }
 
 void    apply_costs(t_list *a, t_list *b)
