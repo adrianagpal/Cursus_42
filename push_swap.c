@@ -1,239 +1,222 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "push_swap.h"
 
-typedef struct s_list
+/*void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov)
 {
-    int number;
-    struct s_list   *next;
-    struct s_list   *prev;
-}   t_list;
-
-int	ft_atoi(const char *nptr)
-{
-	int	result;
-	int	index;
-	int	sign;
-
-	result = 0;
-	index = 0;
-	sign = 1;
-	while (nptr[index] == ' ' || (nptr[index] >= 9 && nptr[index] <= 13))
-	{
-		index++;
-	}
-	if (nptr[index] == '+' || nptr[index] == '-')
-	{
-		if (nptr[index] == '-')
-		{
-			sign = -1 * sign;
-		}
-		index++;
-	}
-	while (nptr[index] >= '0' && nptr[index] <= '9')
-	{
-		result = result * 10 + (nptr[index] - '0');
-		index++;
-	}
-	return (sign * result);
-}
-
-t_list  *ft_create_node(int number)
-{
-    t_list  *node;
-    node = malloc(sizeof(t_list));
-    if (!node)
+    while (node->cost_a > 0 && node->cost_b > 0)
     {
-        return (NULL);
+        rr(a, b);
+        node->cost_a--;
+        node->cost_b--;
+        (*n_mov)++;
     }
-    node->number = number;
-    node->next = node;
-    node->prev = node;
-    return (node);
-}
-
-void    ft_lstadd_back(t_list **list, t_list *new)
-{
-    if (!list || !new)
+    while (node->cost_a < 0 && node->cost_b < 0)
     {
-        return ;
+        rrr(a, b);
+        node->cost_a++;
+        node->cost_b++;
+        (*n_mov)++;
     }
-    if (!(*list))
+}
+
+void rotate_single(t_list **a, t_list **b, t_list *node, int *n_mov)
+{
+    while (node->cost_a > 0)
     {
-        *list = new;
-        new->next = new;
-        new->prev = new;
-        return ;
+        ra(a, b);
+        node->cost_a--;
+        (*n_mov)++;
     }
-    new->prev = (*list)->prev;
-    new->next = *list;
-    (*list)->prev->next = new;
-    (*list)->prev = new;
-}
-
-void    ft_lstadd_front(t_list **list, t_list *new)
-{
-    ft_lstadd_back(list, new);
-    *list = new;
-}
-
-void    swap(t_list **list)
-{
-    t_list *mem_next;
-    t_list *mem_prev;
-
-    if (!list)
-        return ;
-    mem_next = (*list)->next->next;
-    mem_prev = (*list)->next;
-    (*list)->prev->next = (*list)->next;
-    (*list)->next->prev = (*list)->prev;
-    (*list)->next->next = *list;
-    (*list)->prev = mem_prev;
-    (*list)->next = mem_next;    
-    *list = mem_prev;
-}
-
-void    sa(t_list **a)
-{
-    swap(a);
-    write(1, "sa\n", 3);
-}
-
-void    sb(t_list **b)
-{
-    swap(b);
-    write(1, "sb\n", 3);
-}
-
-void    ss(t_list **a, t_list **b)
-{
-    swap(a);
-    swap(b);
-    write(1, "ss\n", 3);
-}
-
-void    push(t_list **a, t_list **b)
-{
-    t_list  *node;
-    if (!(*b) || !b)
+    while (node->cost_a < 0)
     {
-        return ;
+        rra(a, b);
+        node->cost_a++;
+        (*n_mov)++;
     }
-    node = *b;
-
-    (*b)->prev->next = (*b)->next;
-    (*b)->next->prev = (*b)->prev;
-    *b = (*b)->next;
-
-    ft_lstadd_front(a, node);
+    while (node->cost_b > 0)
+    {
+        rb(a, b);
+        node->cost_b--;
+        (*n_mov)++;
+    }
+    while (node->cost_b < 0)
+    {
+        rrb(a, b);
+        node->cost_b++;
+        (*n_mov)++;
+    }
 }
 
-void    pa(t_list **a, t_list **b)
+void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov)
 {
-    push(a, b);
-    write(1, "pa\n", 3);
+    rotate_both(a, b, node, n_mov);
+    rotate_single(a, b, node, n_mov);
+    pa(a, b);
+    (*n_mov)++;
+}*/
+
+void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov)
+{
+    while (node->cost_a > 0 && node->cost_b > 0) 
+    { 
+        rr(a, b); 
+        node->cost_a--; 
+        node->cost_b--; 
+        n_mov++; 
+    } 
+    while (node->cost_a < 0 && node->cost_b < 0) 
+    { 
+        rrr(a, b); 
+        node->cost_a++; 
+        node->cost_b++; 
+        n_mov++; 
+    } 
+    while (node->cost_a > 0) 
+    { 
+        ra(a, b); 
+        node->cost_a--; 
+        n_mov++; 
+    } 
+    while (node->cost_a < 0) 
+    { 
+        rra(a, b); 
+        node->cost_a++; 
+        n_mov++; 
+    } 
+    while (node->cost_b > 0) 
+    { 
+        rb(a, b); 
+        node->cost_b--; 
+        n_mov++; 
+    } 
+    while (node->cost_b < 0) 
+    { 
+        rrb(a, b); 
+        node->cost_b++; 
+        n_mov++; 
+    } 
+    pa(a, b); 
+    n_mov++;
+}
+void    reinsertion(t_list **a, t_list **b, int *n_mov)
+{
+    while (*b)
+    {
+        apply_costs(*a, *b);                  // actualizar costes
+        t_list *node = find_cheapest_node(*b);   // nodo más barato
+        apply_rotations(a, b, node, n_mov);        // mover nodo y push a A
+    }
 }
 
-void    pb(t_list **a, t_list **b)
+void    return_a_to_origin(t_list **a, int *n_mov)
 {
-    push(b, a);
-    write(1, "pb\n", 3);
-}
+    t_list *temp;
+    int cost_ra;
+    int cost_rra;
 
-void    ra(t_list **a)
-{
-    *a = (*a)->next;    
-    write(1, "ra\n", 3);
-}
-
-void    rb(t_list **b)
-{
-    *b = (*b)->next;    
-    write(1, "rb\n", 3);
-}
-
-void    rr(t_list **a, t_list **b)
-{
-    *a = (*a)->next; 
-    *b = (*b)->next;    
-    write(1, "rr\n", 3);
-}
-
-void    rra(t_list **a)
-{
-    *a = (*a)->prev;    
-    write(1, "rra\n", 4);
-}
-
-void    rrb(t_list **b)
-{
-    *b = (*b)->prev;    
-    write(1, "rrb\n", 4);
-}
-
-void    rrr(t_list **a, t_list **b)
-{
-    *a = (*a)->prev; 
-    *b = (*b)->prev;    
-    write(1, "rrr\n", 4);
-}
-
-double compute_disorder(t_list **a)
-{
-    int mistakes;
-    int total_pairs;
-    t_list  *temp;
-
-    if (!a || !(*a) || (*a)->next == *a)
-        return (0);
-
-    total_pairs = 0;
-    mistakes = 0;
     temp = *a;
-    while (temp->next != *a)
+    cost_ra = 0;
+    cost_rra = 0;
+    while (temp && temp->index != 0)
     {
-        total_pairs += 1;
-        if (temp->number > temp->next->number)
-        {
-            mistakes += 1;
-        }
+        cost_ra++;
         temp = temp->next;
-    }    
-    printf("mistakes: %d\n", mistakes);
-    printf("pairs: %d\n", total_pairs);
-    return (1 - (double)mistakes / (double)total_pairs);
+    }
+    cost_rra = list_size(*a) - cost_ra;
+    if (cost_ra <= cost_rra)
+    {
+        while(cost_ra-- > 0)
+        {
+            ra(a, NULL);
+            (*n_mov)++;
+        }    
+    }
+    else
+    {
+        while(cost_rra-- > 0)
+        {
+            rra(a, NULL);
+            (*n_mov)++;
+        }      
+    }
 }
 
 int main(int argc, char **argv)
 {
-    int index;
     t_list  *list = NULL;
-    t_list  *list2 = NULL;
-    t_list  *node;
+    t_list  *aux = NULL;
+    t_list  *list3 = NULL;
+    char *new_argv;
 
-    index = 0;
+    /*if (argc == 1)
+        return (0);*/
     if (argc < 2)
     {
-        printf("Error");
-        return (1);
+        char *debug_argv[] = {"push_swap", "0 2 6 45 38 7 22 42 11 1"};
+        argc = 2;
+        argv = debug_argv;
     }
-    while (index < argc - 1)
+    if (check_valid(argv, argc) == FALSE)
     {
-        /*printf("%d", ft_atoi(argv[index + 1]));*/
-        node = ft_create_node(ft_atoi(argv[index + 1]));
-        ft_lstadd_back(&list, node);
-        index++;
+        write(2, "Error\n", 6);
+        exit(EXIT_FAILURE);
     }
+    new_argv = join_arguments(argv, argc);
+    if (load_list(&list, new_argv) == FALSE)
+    {
+        write(2, "Error\n", 6);
+        free_list(list);
+        exit(EXIT_FAILURE);
+    }
+    if (check_duplicates(list) == TRUE)
+    {
+        write(2, "Error\n", 6);
+        free_list(list);
+        exit(EXIT_FAILURE);
+    }
+
+    apply_index(&list);
+
+    t_list *lis_end = calculate_lis_end(list);
+    printf("End node: %d\n", lis_end->number);
+
+    t_list *lis_start = calculate_lis_start(list, lis_end);
+    printf("Start node: %d\n", lis_start->number);
     
-    printf("%d\n", list->number);
-    printf("%d\n", list->next->number);
-    printf("%d\n", list->next->next->number);
- 
-    double desorden = compute_disorder(&list);
-    printf("%f\n", desorden);
+    int n_mov = keep_lis_in_a(&list, &list3);
 
+    printf("Movimientos:%d\n", n_mov);
 
+    printf("List A after pushing numbers to B:\n");
+    aux = list;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+
+    printf("List B after pushing numbers to B:\n");
+    aux = list3;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+    reinsertion(&list, &list3, &n_mov);
+    return_a_to_origin(&list, &n_mov);
+    printf("List A after returning numbers from B:\n");
+    aux = list;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+    printf("List B after returning numbers from B:\n");
+    aux = list3;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->number);
+        aux = aux->next;
+    }
+    printf("Movimientos:%d\n", n_mov);
     return (0);
-
 }

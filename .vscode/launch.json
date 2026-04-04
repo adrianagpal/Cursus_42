@@ -9,7 +9,7 @@
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "new_push_swap8",
+            "program": "push_swap_final",
             "args": [],
             "cwd": "${workspaceRoot}"
         }
