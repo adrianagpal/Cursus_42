@@ -148,14 +148,14 @@ int main(int argc, char **argv)
     int n_mov;
     char *new_argv;
 
-    /*if (argc == 1)
-        return (0);*/
-    if (argc < 2)
+    if (argc == 1)
+        return (0);
+    /*if (argc < 2)
     {
         char *debug_argv[] = {"push_swap", "89 45 1 2"};
         argc = 2;
         argv = debug_argv;
-    }
+    }*/
     if (check_valid(argv, argc) == FALSE)
     {
         write(2, "Error\n", 6);
@@ -174,13 +174,9 @@ int main(int argc, char **argv)
         free_list(list);
         exit(EXIT_FAILURE);
     }
-
-    apply_index(&list);
-    
+    apply_index(&list);    
     keep_lis_in_a(&list, &list3, &n_mov);
-
     printf("Movimientos:%d\n", n_mov);
-
     printf("List A after pushing numbers to B:\n");
     aux = list;
     while (aux != NULL)
@@ -188,7 +184,6 @@ int main(int argc, char **argv)
         printf("%d\n", aux->number);
         aux = aux->next;
     }
-
     printf("List B after pushing numbers to B:\n");
     aux = list3;
     while (aux != NULL)

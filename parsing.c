@@ -22,7 +22,7 @@ int check_valid(char **argv, int argc)
                 else if (!(j == 0 || str[j - 1] == ' '))
                     return (FALSE);
             }
-            if (!(str[j] >= '0' && str[j] <= '9') && str[j] != ' ')
+            else if (!(str[j] >= '0' && str[j] <= '9') && str[j] != ' ')
                 return (FALSE);
             j++;
         }
