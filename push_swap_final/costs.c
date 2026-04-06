@@ -25,6 +25,35 @@ int    cost_b(t_list *b, t_list *node)
         return (cost_rb);
 }
 
+int cost_a(t_list *a, t_list *node)
+{
+    t_list *tmp;
+    t_list *prv;
+    int cost_ra;
+    int cost_rra;
+
+    if (!a)
+        return (0);
+    cost_ra = 0;
+    tmp = a;
+    prv = ft_lstlast(a);
+    while (tmp)
+    {
+        if (prv->idx < node->idx && node->idx < tmp->idx)
+            break;
+        if (prv->idx > tmp->idx && (node->idx > prv->idx || node->idx < tmp->idx))
+            break;
+        cost_ra++;
+        prv = tmp;
+        tmp = tmp->next;
+    }
+    cost_rra = list_size(a) - cost_ra;
+    if (cost_ra > cost_rra)
+        return (-cost_rra);
+    else
+        return (cost_ra);
+}
+
 int max_index(t_list *list)
 {
     int max;
@@ -70,7 +99,7 @@ t_list	*ft_lstlast(t_list *lst)
 		return (NULL);
 	}
 	temp = lst;
-	while (temp != NULL)
+	while (temp)
 	{
 		if (temp->next == NULL || temp->next == lst)
 		{
@@ -79,35 +108,6 @@ t_list	*ft_lstlast(t_list *lst)
 		temp = temp->next;
 	}
 	return (NULL);
-}
-
-int cost_a(t_list *a, t_list *node)
-{
-    t_list *tmp;
-    t_list *prv;
-    int cost_ra;
-    int cost_rra;
-
-    if (!a)
-        return (0);
-    cost_ra = 0;
-    tmp = a;
-    prv = ft_lstlast(a);
-    while (tmp)
-    {
-        if (prv->idx < node->idx && node->idx < tmp->idx)
-            break;
-        if (prv->idx > tmp->idx && (node->idx > prv->idx || node->idx < tmp->idx))
-            break;
-        cost_ra++;
-        prv = tmp;
-        tmp = tmp->next;
-    }
-    cost_rra = list_size(a) - cost_ra;
-    if (cost_ra > cost_rra)
-        return (-cost_rra);
-    else
-        return (cost_ra);
 }
 
 void    apply_costs(t_list *a, t_list *b)

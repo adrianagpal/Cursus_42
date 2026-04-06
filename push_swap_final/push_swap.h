@@ -48,6 +48,7 @@ int max(int a, int b) ;
 /* CALCULATE LIS */
 void    keep_lis_in_a(t_list **a, t_list **b, int *n_mov);
 void    apply_index(t_list **list);
+t_list *calculate_lis_end(t_list *a);
 
 /* CALCULATE COSTS */
 int    cost_b(t_list *b, t_list *node);
@@ -55,6 +56,9 @@ int    cost_a(t_list *a, t_list *node);
 void    apply_costs(t_list *a, t_list *b);
 int total_moves(int cost_a, int cost_b);
 t_list  *find_cheapest_node(t_list *b);
+int max_index(t_list *list);
+int min_index(t_list *list);
+t_list	*ft_lstlast(t_list *lst);
 
 /* ROTATIONS */
 void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov);

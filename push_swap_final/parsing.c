@@ -101,13 +101,13 @@ int    valid_atoi(const char *nptr, int *nbr)
 	{
 		result = result * 10 + (nptr[index] - '0');
         if (sign == 1 && result > 2147483647)
-            return 0; 
+            return (FALSE); 
         if (sign == -1 && -result < -2147483648)
-            return 0;
+            return (FALSE);
 		index++;
 	}
     *nbr = sign * result;
-	return (1);
+	return (TRUE);
 }
 
 // LOADING

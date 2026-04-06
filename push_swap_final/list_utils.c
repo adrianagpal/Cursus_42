@@ -70,13 +70,12 @@ int    list_size(t_list *list)
 void free_list(t_list *list)
 {
     t_list *temp;
-    t_list *next;
 
     while (list)
     {
-        next = list->next;
+        temp = list->next;
         free(list);
-        list = next;
+        list = temp;
     }
 }
 

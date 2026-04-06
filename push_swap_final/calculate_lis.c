@@ -48,3 +48,32 @@ void    apply_index(t_list **list)
     }
     *list = temp;
 }
+
+t_list *calculate_lis_end(t_list *a)
+{
+    t_list *current;
+    t_list *prev;
+    t_list *lis_end;
+    int max_len = 0;
+
+    current = a;
+    while (current)
+    {
+        prev = current->prev;
+        while (prev)
+        {
+            if (prev->idx < current->idx && current->lis < prev->lis + 1)
+            {
+                current->lis = prev->lis + 1;
+            }
+            prev = prev->prev;
+        }
+        if (current->lis > max_len)
+        {
+            max_len = current->lis;
+            lis_end = current;  // al final podemos reconstruir el LIS desde aquí
+        }
+        current = current->next;
+    }
+    return (lis_end);
+}
