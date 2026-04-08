@@ -11,7 +11,7 @@
             "request": "launch",
             "args": [],
             "cwd": "${workspaceRoot}",
-            "program": "${workspaceFolder}/push_swap_final/push_swap"
+            "program": "${workspaceFolder}/push_swap_final"
         }
     ]
 }

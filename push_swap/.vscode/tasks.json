@@ -1,13 +1,31 @@
 {
     "tasks": [
         {
+            "label": "build push_swap",
+            "type": "shell",
+            "command": "cc",
+            "args": [
+                "-g",
+                "*.c",
+                "-o",
+                "push_swap_final"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "type": "cppbuild",
             "label": "C/C++: gcc build active file",
             "command": "/usr/bin/gcc",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "*.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
