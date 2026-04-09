@@ -2,11 +2,11 @@
 
 # Description
 Push swap is a program that receives a list of numbers as input and sorts them using two stacks (A and B). A stack is a data structure where operations are only allowed at the top. The permitted operations are: 
+
 - swap: swaps the first two elements
 - push: moves the top element from one stack to the other
 - rotate: shifts all elements up by one (top becomes bottom)
 - reverse rotate: shifts all elements down by one (bottom becomes top)
-The pro
 
 # Instructions
 
@@ -16,7 +16,6 @@ The program can receive as arguments either strings with space-separated numbers
 The list consists of nodes defined by the t_list structure. Each node stores the value, its index, LIS-related information, and pointers to the previous and next nodes. The LIs-related attributes will be used by the algorithm and are initialized by default (in_lis = 0, lis = 1).
 
 ## Push swap
-
 
 ### Calculating LIS
 The implementation uses the Turk algorithm improved by seeking the Longest Increasing Subsequence (LIS). First, using the *apply_index* function, each node is assigned an index corresponding to its position in a sorted list. 
@@ -41,8 +40,14 @@ Finally, *return_a_to_origin* rotates stack A so that the smallest element (lowe
 
 # Resources
 
-https://www.geeksforgeeks.org/dsa/longest-increasing-subsequence-dp-3/
+GeeksforGeeks. (2025). *Longest increasing subsequence (LIS)*. https://www.geeksforgeeks.org/dsa/longest-increasing-subsequence-dp-3/
 
-https://github.com/st-yes/42push_swap
+CP-Algorithms. (2025). *Longest increasing subsequence*. https://cp-algorithms.com/dynamic_programming/longest_increasing_subsequence.html
 
-https://docs.redhat.com/es/documentation/red_hat_enterprise_linux/8/html/developing_c_and_cpp_applications_in_rhel_8/example-building-a-c-program-using-a-makefile_managing-more-code-with-make
+st-yes. (2022). *42push_swap* [GitHub repository]. https://github.com/st-yes/42push_swap
+
+Ayogun, A. (2022). *Push Swap — A journey to find most efficient sorting algorithm*. https://medium.com/@ayogun/push-swap-c1f5d2d41e97
+
+Red Hat. (n. d.). *Example: Building a C program using a Makefile*. https://docs.redhat.com/es/documentation/red_hat_enterprise_linux/8/html/developing_c_and_cpp_applications_in_rhel_8/example-building-a-c-program-using-a-makefile_managing-more-code-with-make
+
+After testing different approaches in which the number of movements exceeded the project’s minimum requirements, the AI was used to determine which type of logic would be more efficient in minimizing the number of movements.
