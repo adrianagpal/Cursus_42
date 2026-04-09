@@ -44,3 +44,5 @@ Finally, *return_a_to_origin* rotates stack A so that the smallest element (lowe
 https://www.geeksforgeeks.org/dsa/longest-increasing-subsequence-dp-3/
 
 https://github.com/st-yes/42push_swap
+
+https://docs.redhat.com/es/documentation/red_hat_enterprise_linux/8/html/developing_c_and_cpp_applications_in_rhel_8/example-building-a-c-program-using-a-makefile_managing-more-code-with-make

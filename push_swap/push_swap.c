@@ -56,7 +56,7 @@ void push_swap_10(t_list **a, t_list **b, int *n_mov)
     push_swap_small(a, n_mov);
     while (*b)
         reinsertion(a, b, n_mov); 
-    return_a_to_origin(a, b, n_mov);
+    return_a_to_origin(a, n_mov);
 }
 
 void    push_swap(t_list *a)
@@ -77,15 +77,13 @@ void    push_swap(t_list *a)
     if (list_size(a) >= 3 && list_size(a) <= 10)
     {
         push_swap_10(&a, &b, &n_mov);
-        printf("Movimientos: %d", n_mov);
         return;
     }    
     lis_end = calculate_lis_end(a);
-    calculate_lis_start(a, lis_end);
+    calculate_lis_start(lis_end);
     keep_lis_in_a(&a, &b, &n_mov);    
     reinsertion(&a, &b, &n_mov);
-    return_a_to_origin(&a, &b, &n_mov);
-    printf("Movimientos: %d", n_mov);
+    return_a_to_origin(&a, &n_mov);
 }
 
 int main(int argc, char **argv)
@@ -105,6 +103,7 @@ int main(int argc, char **argv)
     if (load_list(&a, new_argv) == FALSE || check_duplicates(a) == TRUE)
     {
         write(2, "Error\n", 6);
+        free(new_argv);
         free_list(a);
         exit(EXIT_FAILURE);
     }

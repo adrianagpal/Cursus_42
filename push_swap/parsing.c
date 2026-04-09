@@ -12,7 +12,7 @@ Return value:
 - FALSE if any invalid character is found or any condition is not met. 
 - TRUE if the input is valid. 
 */
-int check_valid(char **argv, int argc)
+t_bool check_valid(char **argv, int argc)
 {
     int i;
     int j;
@@ -79,7 +79,7 @@ load_list parses a string containing numbers separated by spaces and loads
 them into a linked list. It iterates through the strings and detects the beginning
 of each number, which converts using valid_atoi. 
 */
-int    load_list(t_list **list, char *new_argv)
+t_bool    load_list(t_list **list, char *new_argv)
 {
     int flag;
     int nbr;
@@ -147,7 +147,7 @@ Return value:
 - TRUE if the conversion is valid and within integer limits. 
 - FALSE if there is an overflow. 
 */
-int    valid_atoi(const char *nptr, int *nbr)
+t_bool    valid_atoi(const char *nptr, int *nbr)
 {
 	long    result;
 	int index;

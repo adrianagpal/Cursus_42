@@ -67,7 +67,7 @@ void    reinsertion(t_list **a, t_list **b, int *n_mov)
 Once the list is ordered, but the lowest index is not in the first position, 
 this function returns the lowest index back to the top of the stack.
 */
-void    return_a_to_origin(t_list **a, t_list **b, int *n_mov)
+void    return_a_to_origin(t_list **a, int *n_mov)
 {
     t_list *temp;
     int cost_ra;

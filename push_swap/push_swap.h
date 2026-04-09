@@ -47,7 +47,7 @@ int max(int a, int b) ;
 /* CALCULATE LIS (calculate_lis.c) */
 void    apply_index(t_list **list);
 t_list *calculate_lis_end(t_list *a);
-t_list  *calculate_lis_start(t_list *a, t_list *lis_end);
+t_list  *calculate_lis_start(t_list *lis_end);
 void    keep_lis_in_a(t_list **a, t_list **b, int *n_mov);
 
 /* CALCULATE COSTS (costs.c) */
@@ -62,7 +62,7 @@ void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov);
 void rotate_single(t_list **a, t_list **b, t_list *node, int *n_mov);
 void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov);
 void    reinsertion(t_list **a, t_list **b, int *n_mov);
-void    return_a_to_origin(t_list **a, t_list **b, int *n_mov);
+void    return_a_to_origin(t_list **a, int *n_mov);
 
 /* SWAP (swap.c) */
 void    swap(t_list **list);

@@ -72,7 +72,7 @@ calculate_lis_start calculates from the node in which the longest increasing sub
 which nodes are included in the LIS. It iterates through previous nodes and marks those that 
 belong to the LIS updating the value in in_lis to 1. 
 */
-t_list  *calculate_lis_start(t_list *a, t_list *lis_end)
+t_list  *calculate_lis_start(t_list *lis_end)
 {
     t_list *temp;
     t_list *lis_start;
