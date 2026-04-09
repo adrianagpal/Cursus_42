@@ -24,11 +24,11 @@ typedef struct s_list
 }   t_list;
 
 /* PARSING (parsing.c) */ 
-int check_valid(char **argv, int argc);
+t_bool check_valid(char **argv, int argc);
 char    *join_arguments(char **argv, int argc);
-int load_list(t_list **list, char *new_argv);
-int valid_atoi(const char *nptr, int *nbr);
-int check_duplicates(t_list *list);
+t_bool load_list(t_list **list, char *new_argv);
+t_bool valid_atoi(const char *nptr, int *nbr);
+t_bool check_duplicates(t_list *list);
 
 /* LIST UTILS (list_utils.c) */
 t_list  *ft_create_node(int number);
@@ -50,37 +50,37 @@ t_list *calculate_lis_end(t_list *a);
 t_list  *calculate_lis_start(t_list *a, t_list *lis_end);
 void    keep_lis_in_a(t_list **a, t_list **b, int *n_mov);
 
-/* CALCULATE COSTS */
+/* CALCULATE COSTS (costs.c) */
 int    cost_b(t_list *b, t_list *node);
 int    cost_a(t_list *a, t_list *node);
 void    calculate_costs(t_list *a, t_list *b);
 int total_moves(int cost_a, int cost_b);
 t_list  *find_cheapest_node(t_list *b);
 
-/* ROTATIONS */
+/* ROTATIONS (rotations.c) */
 void rotate_both(t_list **a, t_list **b, t_list *node, int *n_mov);
 void rotate_single(t_list **a, t_list **b, t_list *node, int *n_mov);
 void apply_rotations(t_list **a, t_list **b, t_list *node, int *n_mov);
 void    reinsertion(t_list **a, t_list **b, int *n_mov);
 void    return_a_to_origin(t_list **a, t_list **b, int *n_mov);
 
-/* SWAP */
+/* SWAP (swap.c) */
 void    swap(t_list **list);
 void    sa(t_list **a, int *n_mov);
 void    sb(t_list **b, int *n_mov);
 void    ss(t_list **a, t_list **b, int *n_mov);
 
-/* PUSH */
+/* PUSH (push.c) */
 void    push(t_list **a, t_list **b);
 void    pa(t_list **a, t_list **b, int *n_mov);
 void    pb(t_list **a, t_list **b, int *n_mov);
 
-/* ROTATE */
+/* ROTATE (rotate.c) */
 void    ra(t_list **a, int *n_mov);
 void    rb(t_list **a, int *n_mov);
 void    rr(t_list **a, t_list **b, int *n_mov);
 
-/* REVERSE ROTATE */
+/* REVERSE ROTATE (reverse_rotate.c) */
 void    rra(t_list **a, int *n_mov);
 void rrb(t_list **b, int *n_mov);
 void    rra_no_print(t_list **a);

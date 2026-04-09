@@ -116,7 +116,7 @@ Return value:
 - TRUE if at least one duplicate value is found. 
 - FALSE if all values are unique. 
 */
-int check_duplicates(t_list *list)
+t_bool  check_duplicates(t_list *list)
 {
     t_list  *current;
     t_list  *temp;
