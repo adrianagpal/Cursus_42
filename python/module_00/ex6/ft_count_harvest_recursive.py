@@ -1,6 +1,6 @@
-def ft_count_harvest_recursive(harvest=None, count=1) -> None:
+def ft_count_harvest_recursive(harvest = None, count: int = 1) -> None:
     if harvest is None:
-        harvest: int = int(input("Days until harvest: "))
+        harvest = int(input("Days until harvest: "))
     if count > harvest:
         print("Harvest time!")
         return
