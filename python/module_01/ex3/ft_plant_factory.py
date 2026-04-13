@@ -7,21 +7,23 @@ class Plant:
         self.age_days = age_days
     def show(self) -> None:
         print(f"{self.name}: {round(self.height, 1)}cm, {self.age_days} days old")
-    def grow(self) -> Plant:
+    def grow(self):
         self.height += 0.8
         return self
-    def age(self) -> Plant:
+    def age(self):
         self.age_days += 1
         return self
 
-    
 if __name__ == "__main__":
-    rose: Plant = Plant("Rose", 25.0, 30)
-    initial_height: float = rose.height
+    plants: list = [
+        Plant("Rose", 25.0, 30),
+        Plant("Oak", 200.0, 365),
+        Plant("Cactus", 5.0, 90),
+        Plant("Sunflower", 80, 45),
+        Plant("Fern", 15, 120)       
+    ]
 
-    print("=== Garden Plant Growth ===")
-    rose.show()
-    for count in range(1, 8):
-        print(f"=== Day {count} ===") 
-        rose.grow().age().show()  
-    print(f"Growth this week: {round(rose.height - initial_height, 1)}cm")
+    print("=== Plant Factory Output ===")
+    for plant in plants:
+        print("Created:", end = " ")
+        plant.show()
