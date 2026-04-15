@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 14:52:14 by username          #+#    #+#             */
-/*   Updated: 2026/04/09 16:03:43 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/04/15 17:34:01 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_bool	check_valid(char **argv, int argc)
 		j = 0;
 		while (s[j] != '\0')
 		{
-			if (s[j] == '-')
+			if (s[j] == '-' || s[j] == '+')
 			{
 				if (s[j + 1] == '\0' || !(s[j + 1] >= '0' && s[j + 1] <= '9'))
 					return (FALSE);
@@ -104,14 +104,14 @@ t_bool	load_list(t_list **list, char *nw_arg)
 	flag = 0;
 	while (*nw_arg != '\0')
 	{
-		if (((*nw_arg >= '0' && *nw_arg <= '9') || *nw_arg == '-') && flag == 0)
+		if (ft_is_digit_sign(*nw_arg) && flag == 0)
 		{
 			if (!valid_atoi(nw_arg, &nbr))
 				return (FALSE);
 			node = ft_create_node(nbr);
 			ft_lstadd_back(list, node);
 			flag = 1;
-			if (*nw_arg == '-')
+			if (*nw_arg == '-' || *nw_arg == '+')
 				nw_arg++;
 			while (*nw_arg >= '0' && *nw_arg <= '9')
 				nw_arg++;
@@ -175,9 +175,10 @@ t_bool	valid_atoi(const char *nptr, int *nbr)
 	result = 0;
 	index = 0;
 	sign = 1;
-	if (nptr[index] == '-')
+	if (nptr[index] == '-' || nptr[index] == '+')
 	{
-		sign *= -1;
+		if (nptr[index] == '-')
+			sign = -1 * sign;
 		index++;
 	}
 	while (nptr[index] >= '0' && nptr[index] <= '9')

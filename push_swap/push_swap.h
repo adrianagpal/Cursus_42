@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 14:52:28 by username          #+#    #+#             */
-/*   Updated: 2026/04/09 18:52:57 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/04/15 17:34:23 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	swap(t_list **list);
 void	sa(t_list **a, int *n_mov);
 void	sb(t_list **b, int *n_mov);
 void	ss(t_list **a, t_list **b, int *n_mov);
+t_bool	ft_is_digit_sign(char c);
 
 /* PUSH (push.c) */
 void	push(t_list **a, t_list **b);

@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 14:52:53 by username          #+#    #+#             */
-/*   Updated: 2026/04/09 16:04:06 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/04/15 17:34:34 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,11 @@ void	ss(t_list **a, t_list **b, int *n_mov)
 	swap(b);
 	write(1, "ss\n", 3);
 	(*n_mov)++;
+}
+
+t_bool	ft_is_digit_sign(char c)
+{
+	if ((c >= '0' && c <= '9') || c == '-' || c == '+')
+		return (TRUE);
+	return (FALSE);
 }
