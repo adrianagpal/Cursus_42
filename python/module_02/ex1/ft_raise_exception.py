@@ -11,29 +11,24 @@ def input_temperature(temp_str: str) -> int:
     elif temp > 40:
         raise Exception(f"Caught input_temperature error: {temp}°C is too hot for plants (max 40°C)\n")
 
-    print(f"Temperature is now {temp}°C\n")
     return temp
 
-def test_temperature(temp_str: str) -> None:
-    try:
-        input_temperature(temp_str)
+def test_temperature() -> None:
+    inputs: list = ["25", "abc", "100", "-50"]
+    for input in inputs: 
+        try:
+            input_temperature(input)
+            print(f"Temperature is now {input}°C\n")
 
-    except ValueError as err:
-        print(f"Caught input_temperature error: {err}\n")
+        except ValueError as err:
+            print(f"Caught input_temperature error: {err}\n")
 
-    except Exception as exc:
-        print(exc)
+        except Exception as exc:
+            print(exc)
+
+    print("All tests completed - program didn't crash!")
 
 if __name__ == "__main__":
     print("=== Garden Temperature Checker ===\n")
 
-    test_temperature('25')
-
-    # It doesnt print the apostrophe
-    test_temperature('abc')
-
-    test_temperature('100')
-
-    test_temperature('-50')
-
-    print("All tests completed - program didn't crash!")
+    test_temperature()
