@@ -2,7 +2,8 @@
 
 import sys
 
-if __name__ == "__main__":
+
+def main() -> None:
     print("=== Command Quest ===")
     print(f"Program name: {sys.argv[0]}")
     n_arg: int = len(sys.argv)
@@ -18,3 +19,7 @@ if __name__ == "__main__":
             index += 1
 
     print(f"Total arguments: {n_arg}")
+
+
+if __name__ == "__main__":
+    main()

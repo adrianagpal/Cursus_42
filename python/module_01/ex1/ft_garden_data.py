@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name: str, height: int, age: int) -> None:
+    def __init__(
+            self,
+            name: str | None = None,
+            height: float = 0.0,
+            age: int = 0) -> None:
         self.name = name
         self.height = height
         self.age = age
@@ -11,9 +15,20 @@ class Plant:
 
 
 def main() -> None:
-    rose: Plant = Plant("Rose", 25, 30)
-    sunflower: Plant = Plant("Sunflower", 80, 45)
-    cactus: Plant = Plant("Cactus", 15, 120)
+    rose: Plant = Plant()
+    rose.name = "Rose"
+    rose.height = 25
+    rose.age = 30
+
+    sunflower: Plant = Plant()
+    sunflower.name = "Sunflower"
+    sunflower.height = 80
+    sunflower.age = 45
+
+    cactus: Plant = Plant()
+    cactus.name = "Cactus"
+    cactus.height = 15
+    cactus.age = 120
 
     print("=== Garden Plant Registry ===")
     rose.show()

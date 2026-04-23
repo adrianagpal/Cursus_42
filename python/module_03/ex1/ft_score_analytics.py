@@ -2,26 +2,38 @@
 
 import sys
 
-if __name__ == "__main__":
+
+def create_new_list(arg_list: list[str]) -> list[int]:
+    new_list: list[int] = []
+    for arg in arg_list:
+        try:
+            new_list += [int(arg)]
+
+        except ValueError:
+            print(f"Invalid parameter: {arg!r}")
+
+    return new_list
+
+
+def main() -> None:
     print("=== Player Score Analytics ===")
 
-    n_arg: int = len(sys.argv)
-    index: int = 1
-    arg_list: list = []
+    arg_list: list[int] = create_new_list(sys.argv[1:])
+    n_arg: int = len(arg_list)
 
-    try:
-        for arg in sys.argv:
-            arg_list += [int(arg)]
+    if n_arg == 0:
+        print("No scores provided. Usage: python3 ft_score_analytics.py <score1> <score2> ...")
 
-    except Exception as te:
-        print(f"Invalid parameter: {arg}")
-        print("No scores provided. Usage: python3 ft_score_analytics.py <score1> <score2> ..")
-
-    finally:     
-        print(f"Total players: {len(arg_list)}")
+    else:
+        print(f"Scores processed: {arg_list}")
+        print(f"Total players: {n_arg}")
         print(f"Total score: {sum(arg_list)}")
-        print(f"Average score: {sum(arg_list)/len(arg_list)}")
+        print(f"Average score: {sum(arg_list)/n_arg}")
         print(f"High score: {max(arg_list)}")
         print(f"Low score: {min(arg_list)}")
         print(f"Score range: {max(arg_list) - min(arg_list)}")
-        print(arg_list)
+
+
+if __name__ == "__main__":
+    main()
+
