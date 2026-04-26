@@ -21,8 +21,9 @@ def main() -> None:
     arg_list: list[int] = create_new_list(sys.argv[1:])
     n_arg: int = len(arg_list)
 
-    if n_arg == 0:
-        print("No scores provided. Usage: python3 ft_score_analytics.py <score1> <score2> ...")
+    if not arg_list:
+        print("No scores provided. Usage: python3 "
+              "ft_score_analytics.py <score1> <score2> ...\n")
 
     else:
         print(f"Scores processed: {arg_list}")
@@ -31,9 +32,8 @@ def main() -> None:
         print(f"Average score: {sum(arg_list)/n_arg}")
         print(f"High score: {max(arg_list)}")
         print(f"Low score: {min(arg_list)}")
-        print(f"Score range: {max(arg_list) - min(arg_list)}")
+        print(f"Score range: {max(arg_list) - min(arg_list)}\n")
 
 
 if __name__ == "__main__":
     main()
-

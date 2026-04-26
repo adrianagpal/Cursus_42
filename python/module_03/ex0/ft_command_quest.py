@@ -18,7 +18,7 @@ def main() -> None:
             print(f"Argument {index}: {arg}")
             index += 1
 
-    print(f"Total arguments: {n_arg}")
+    print(f"Total arguments: {n_arg}\n")
 
 
 if __name__ == "__main__":

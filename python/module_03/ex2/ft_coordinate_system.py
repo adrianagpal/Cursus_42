@@ -4,7 +4,8 @@ import math
 
 
 def get_euclidean_distance(
-        coord1: tuple[float], coord2: tuple[float]) -> float:
+        coord1: tuple[float, float, float],
+        coord2: tuple[float, float, float]) -> float:
     value: float = 0.0
     index: int = 0
     for number in coord1:
@@ -13,17 +14,16 @@ def get_euclidean_distance(
     return math.sqrt(value)
 
 
-def get_player_pos() -> None:
+def get_player_pos() -> tuple[float, float, float]:
     while True:
         raw: str = input("Enter new coordinates as floats in format 'x,y,z': ")
-        parts: list[float] = raw.split(",")
+        parts: list[str] = raw.split(",")
         if len(parts) != 3:
             print("Invalid syntax")
 
         else:
-            coord: list[float] = []
-
             try:
+                coord: list[float] = []
                 for number in parts:
                     coord += [float(number)]
             except Exception as e:
@@ -36,7 +36,7 @@ def get_player_pos() -> None:
 
 def main() -> None:
     print("=== Game Coordinate System ===\n")
-    
+
     print("Get a first set of coordinates")
     (x1, y1, z1) = get_player_pos()
     print(f"Got a first tuple: {(x1, y1, z1)}")
