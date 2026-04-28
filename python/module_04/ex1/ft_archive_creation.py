@@ -28,14 +28,18 @@ def main() -> None:
         finally:
             if f is not None:
                 a = open("a.txt", "w")
+                
+                parts = file_contents.split("\n")
+                for part in parts:
+                    a.write(part.strip("\n") + "#\n")
 
-                for line in file_contents:
-                    a.write(line.strip("\n").join('#'))
+                a.close()
 
-                a_contents = open("a.txt", "r").read()
+                a_contents = open("a.txt", "r")
+                a_read = a_contents.read()
                 print(f"File {sys.argv[1]!r} closed.")
-                print("Transform data:", "---\n", a_contents, "\n---", sep = "\n")
-
+                print("Transform data:", "---\n", a_read, "\n---", sep = "\n")
+                a.close()
 
 if __name__ == "__main__":
     main()
