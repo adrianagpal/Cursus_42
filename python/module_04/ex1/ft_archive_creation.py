@@ -27,12 +27,10 @@ def main() -> None:
             print(f"Error opening file {sys.argv[1]!r}: {pe}\n")
         finally:
             if f is not None:
-                new_contents = file_contents.replace("\n", "#\n")
-                print(new_contents)
                 a = open("a.txt", "w")
 
                 for line in file_contents:
-                    a.write(line + '#')
+                    a.write(line.strip("\n").join('#'))
 
                 a_contents = open("a.txt", "r").read()
                 print(f"File {sys.argv[1]!r} closed.")
