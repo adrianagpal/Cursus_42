@@ -3,9 +3,14 @@
 import sys, typing
 
 
+#def transform_data():
+
+
+
 def main() -> None:
     n_arg: int = len(sys.argv)
     f: typing.IO | None = None
+    a: typing.IO | None = None
 
     if n_arg != 2:
         print(f"Usage: {sys.argv[0]} <file>\n")
@@ -22,8 +27,16 @@ def main() -> None:
             print(f"Error opening file {sys.argv[1]!r}: {pe}\n")
         finally:
             if f is not None:
-                f.close()
+                new_contents = file_contents.replace("\n", "#\n")
+                print(new_contents)
+                a = open("a.txt", "w")
+
+                for line in file_contents:
+                    a.write(line + '#')
+
+                a_contents = open("a.txt", "r").read()
                 print(f"File {sys.argv[1]!r} closed.")
+                print("Transform data:", "---\n", a_contents, "\n---", sep = "\n")
 
 
 if __name__ == "__main__":
