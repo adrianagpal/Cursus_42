@@ -30,9 +30,12 @@ def main() -> None:
                 new_contents = file_contents.replace("\n", "#\n")
                 if not file_contents.endswith("\n"):
                     new_contents += "#"
-                print("Transform data:", "---\n", new_contents, "\n---", sep = "\n")                
+                print("Transform data:", "---\n", new_contents, "\n---", sep = "\n")   
 
-                file_name = input("Enter new file name (or empty): ")
+                print("Enter new file name (or empty): ", end="", flush=True)             
+
+                file_name = sys.stdin.read()
+                
                 if file_name:
                     print(f"Saving data to {file_name!r}\n"
                           f"Data saved in file {file_name!r}.\n")
