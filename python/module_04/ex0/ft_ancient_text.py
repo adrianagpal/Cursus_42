@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import sys, typing
+import sys
+import typing
 
 
 def main() -> None:
@@ -12,14 +13,13 @@ def main() -> None:
     else:
         print("=== Cyber Archives Recovery ===")
         print(f"Accessing file {sys.argv[1]!r}")
+        file_contents: str = ""
         try:
             f = open(sys.argv[1])
-            file_contents: str = f.read()
-            print("---\n", file_contents, "\n---", sep = "\n")
-        except FileNotFoundError as fe:
-            print(f"Error opening file {sys.argv[1]!r}: {fe}\n")
-        except PermissionError as pe:
-            print(f"Error opening file {sys.argv[1]!r}: {pe}\n")
+            file_contents = f.read()
+            print("---\n", file_contents, "---", sep="\n")
+        except Exception as e:
+            print(f"Error opening file {sys.argv[1]!r}: {e}\n")
         finally:
             if f is not None:
                 f.close()

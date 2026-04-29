@@ -1,10 +1,33 @@
 #!/usr/bin/env python3
 
-import sys, typing
+import sys
+import typing
 
 
-#def transform_data():
+def transform_data(content: str) -> None:
+    sys.stdout.write(f"Transform data:\n---\n\n{content}\n---\n"
+                     "Enter new file name (or empty): ")
+    sys.stdout.flush()
 
+    file_name: str = sys.stdin.readline().rstrip("\n")
+
+    if file_name:
+        sys.stdout.write(f"Saving data to {file_name!r}\n")
+        sys.stdout.flush()
+        try:
+            a: typing.IO = open(file_name, "w")
+            a.write(content)
+            if a is not None:
+                a.close()
+            sys.stdout.write(f"Data saved in file {file_name!r}.\n")
+            sys.stdout.flush()
+        except Exception as e:
+            sys.stderr.write(f"[STDERR] Error opening file "
+                             f"{sys.argv[1]!r}: {e}\n"
+                             "Data not saved.")
+    else:
+        sys.stdout.write("Data not saved.")
+        sys.stdout.flush()
 
 
 def main() -> None:
@@ -12,41 +35,35 @@ def main() -> None:
     f: typing.IO | None = None
 
     if n_arg != 2:
-        print(f"Usage: {sys.argv[0]} <file>\n")
+        sys.stdout.write(f"Usage: {sys.argv[0]} <file>\n\n")
+        sys.stdout.flush()
     else:
-        print("=== Cyber Archives Recovery & Preservation ===")
-        print(f"Accessing file {sys.argv[1]!r}")
+        file_contents: str = ""
+        sys.stdout.write("=== Cyber Archives Recovery & Preservation ===\n"
+                         f"Accessing file {sys.argv[1]!r}\n")
+        sys.stdout.flush()
+
         try:
             f = open(sys.argv[1])
-            file_contents: str = f.read()
-            print("---\n", file_contents, "\n---", sep = "\n")
-        except FileNotFoundError as fe:
-            print(f"Error opening file {sys.argv[1]!r}: {fe}\n")
-        except PermissionError as pe:
-            print(f"Error opening file {sys.argv[1]!r}: {pe}\n")
+            file_contents = f.read()
+            sys.stdout.write(f"---\n\n{file_contents}\n---\n")
+            sys.stdout.flush()
+
+        except Exception as e:
+            sys.stderr.write(f"[STDERR] Error opening file "
+                             f"{sys.argv[1]!r}: {e}\n")
         finally:
-            if f is not None:                
-                print(f"File {sys.argv[1]!r} closed.\n")
-                new_contents = file_contents.replace("\n", "#\n")
+            if f is not None:
+                f.close()
+                if f.closed:
+                    sys.stdout.write(f"File {sys.argv[1]!r} closed.\n\n")
+                    sys.stdout.flush()
+
+                new_contents: str = file_contents.replace("\n", "#\n")
                 if not file_contents.endswith("\n"):
                     new_contents += "#"
-                print("Transform data:", "---\n", new_contents, "\n---", sep = "\n")   
 
-                print("Enter new file name (or empty): ", end="", flush=True)             
-
-                file_name = sys.stdin.read()
-                
-                if file_name:
-                    print(f"Saving data to {file_name!r}\n"
-                          f"Data saved in file {file_name!r}.\n")
-                    a: typing.IO = open(file_name, "w")
-                    a.write(new_contents)
-                    a.close()
-
-                else:
-                    print("Not saving data.")
-
-                f.close()
+                transform_data(new_contents)
 
 
 if __name__ == "__main__":
