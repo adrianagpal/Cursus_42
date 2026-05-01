@@ -72,6 +72,7 @@ class LogProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         self.data = [data] if not isinstance(data, list) else data
         valid = all(isinstance(item, dict) for item in self.data)
+        print(item for item in self.data)
 
         return valid
 
@@ -119,13 +120,12 @@ def main() -> None:
     
     dict_proc = LogProcessor()
     print(f"Trying to validate input 'Hello': {dict_proc.validate('Hello')}")
-    txt_proc.ingest([{'log_level': 'NOTICE', 'log_message': 'Connection to server'}, {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}])
+    dict_proc.ingest([{'log_level': 'NOTICE', 'log_message': 'Connection to server'}, {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}])
 
     print("Extracting 2 values...")
-    output = dict_proc.output()
     for item in range(0, 2):
         output = dict_proc.output()
-        print(f"Log entry {output[0]}: {output[1]}")
+        print(f"Log entry {output[0]}: {output[1]['log_level']}: {output[1]['log_message']}")
 
 
 if __name__ == "__main__":

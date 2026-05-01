@@ -7,8 +7,12 @@ import typing
 def transform_data(content: str) -> None:
     print("Transform data:",
           "---\n", content, "\n---", sep="\n")
+    file_name: str = ""
 
-    file_name: str = input("Enter new file name (or empty): ")
+    try:
+        file_name = input("Enter new file name (or empty): ")
+    except KeyboardInterrupt:
+        print("\nProgram interrumpted")
 
     if file_name:
         print(f"Saving data to {file_name!r}\n"
