@@ -5,6 +5,7 @@ from typing import Any
 
 
 class DataProcessor(ABC):
+    
     @abstractmethod
     def validate(self, data: Any) -> bool:
         pass
@@ -17,11 +18,46 @@ class DataProcessor(ABC):
         if self.new_list:
             return self.new_list.pop(0)
 
+    def stats(self) -> str:
+        return f"{self.__class__.__name__}: total {self.processed} items processed, remaining {len(self.new_list)} on processor"
+
+
+class DataStream():
+
+    def __init__(self):
+        self.processors = []
+
+    def register_processor(self, proc: DataProcessor) -> None:
+        if isinstance(proc, DataProcessor):
+            self.processors.append(proc)
+
+    def process_stream(self, stream: list[Any]) -> None:
+    
+        for element in stream:
+            handled = False
+            for processor in self.processors:
+                if processor.validate(element):
+                    processor.ingest(element)
+                    handled = True
+                    break
+            if not handled:
+                print(f"DataStream error - Can't process element in stream: {element}")
+
+    def print_processors_stats(self) -> None:
+        print("== DataStream statistics ==")
+        if self.processors:
+            for processor in self.processors:
+                print(processor.stats())
+            print()
+        else:
+            print("No processor found, no data\n")
+
 
 class NumericProcessor(DataProcessor):
 
     def __init__(self):
         self.new_list = []
+        self.processed = 0
         
     def validate(self, data: Any) -> bool:
         self.data = [data] if not isinstance(data, list) else data
@@ -32,8 +68,8 @@ class NumericProcessor(DataProcessor):
     def ingest(self, data: int | float) -> None:
         try:
             if self.validate(data):
-                print(f"Processing data: {data}")
                 self.new_list += [(self.data.index(x), str(x)) for x in self.data]
+                self.processed += len(self.data)
             else:
                 print(f"Test invalid ingestion of {type(data).__name__} '{data}' without prior validation:")
                 raise Exception()
@@ -45,6 +81,7 @@ class TextProcessor(DataProcessor):
 
     def __init__(self):
         self.new_list = []
+        self.processed = 0
         
     def validate(self, data: Any) -> bool:
         self.data = [data] if not isinstance(data, list) else data
@@ -55,8 +92,8 @@ class TextProcessor(DataProcessor):
     def ingest(self, data: str | list[str]) -> None:
         try:
             if self.validate(data):
-                print(f"Processing data: {data}")
                 self.new_list += [(self.data.index(x), str(x)) for x in self.data]
+                self.processed += len(self.data)
             else:
                 print(f"Test invalid ingestion of {type(data).__name__} '{data}' without prior validation:")
                 raise Exception()
@@ -68,6 +105,7 @@ class LogProcessor(DataProcessor):
 
     def __init__(self):
         self.new_list = []
+        self.processed = 0
         
     def validate(self, data: Any) -> bool:
         self.data = [data] if not isinstance(data, list) else data
@@ -80,6 +118,7 @@ class LogProcessor(DataProcessor):
             if self.validate(data):
                 print(f"Processing data: {data}")
                 self.new_list += [(self.data.index(x), f"{x['log_level']}: {x['log_message']}") for x in self.data]
+                self.processed += len(self.data)
             else:
                 print(f"Test invalid ingestion of {type(data).__name__} '{data}' without prior validation:")
                 raise Exception()
@@ -88,47 +127,46 @@ class LogProcessor(DataProcessor):
 
 
 def main() -> None:
-    print("=== Code Nexus - Data Processor ===\n")
+    print("=== Code Nexus - Data Stream ===\n")
 
-    print("Testing Numeric Processor...")
+    print("Initialize Data Stream...")
+    stream = DataStream()
+    stream.register_processor("")
+    stream.print_processors_stats()
 
+    print("Registering Numeric Processor\n")
     num_proc = NumericProcessor()
-    print(f"Trying to validate input '42': {num_proc.validate(42)}")
-    print(f"Trying to validate input 'Hello': {num_proc.validate('Hello')}")
-    num_proc.ingest('foo')
-    num_proc.ingest([1, 2, 3, 4, 5])
+    stream.register_processor(num_proc)
 
-    print("Extracting 3 values...")
-    for item in range(0, 3):
-        output = num_proc.output()
-        print(f"Numeric value {output[0]}: {output[1]}")
+    first_batch =  ['Hello world', [3.14, -1, 2.71], 
+                    [{'log_level': 'WARNING', 'log_message': 'Telnet access! Use ssh instead'}, 
+                    {'log_level': 'INFO', 'log_message': 'User wil is connected'}], 42, ['Hi', 'five']]
 
-    print()
-    print("Testing Text Processor...")
-    
+    print(f"Send first batch of data on stream: {first_batch}")    
+    stream.process_stream(first_batch)
+    stream.print_processors_stats()
+
+    print("Registering other data processors")
     txt_proc = TextProcessor()
-    print(f"Trying to validate input '42': {txt_proc.validate(42)}")
-    txt_proc.ingest(['Hello', 'Nexus', 'World'])
-
-    print("Extracting 1 value...")
-    output = txt_proc.output()
-    print(f"Text value {output[0]}: {output[1]}\n")
-
-    print()
-    print("Testing Log Processor...")
-    
     dict_proc = LogProcessor()
-    print(f"Trying to validate input 'Hello': {dict_proc.validate('Hello')}")
-    dict_proc.ingest([{'log_level': 'NOTICE', 'log_message': 'Connection to server'}, {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}])
 
-    print("Extracting 2 values...")
+    stream.register_processor(txt_proc)
+    stream.register_processor(dict_proc)
+
+    print("Send the same batch again")
+    stream.process_stream(first_batch)
+    stream.print_processors_stats()
+
+    print("Consume some elements from the data processors: Numeric 3, Text 2, Log 1")
+    for item in range(0, 3):
+        num_proc.output()
+
     for item in range(0, 2):
-        output = dict_proc.output()
-        print(f"Log entry {output[0]}: {output[1]['log_level']}: {output[1]['log_message']}")
+        txt_proc.output()
+    
+    dict_proc.output()
+    stream.print_processors_stats()
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception:
-        exit
+    main()
