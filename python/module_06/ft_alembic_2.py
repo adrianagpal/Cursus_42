@@ -1,3 +1,7 @@
-import alchemy
+#!/usr/bin/env python3
 
-print(alchemy.create_earth())
+import alchemy.elements
+
+print("=== Alembic 2 ===")
+print("Accessing alchemy/elements.py using 'import ...' structure")
+print(f"Testing create_earth: {alchemy.elements.create_earth()}")

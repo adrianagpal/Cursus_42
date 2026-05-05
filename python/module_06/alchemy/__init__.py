@@ -1,3 +1,5 @@
-from .elements import create_air, create_earth
+from .elements import create_air
+from .potions import strength_potion
+from .potions import healing_potion as heal
 
-__all__ = ["create_air", "create_earth"]
+__all__ = ["create_air", "strength_potion", "healing_potion"]
