@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
-import alchemy.transmutation
+import alchemy.transmutation.recipes
 
-print(alchemy.transmutation.lead_to_gold())
+print("=== Transmutation 0 ===")
+print("Using file alchemy/transmutation/recipes.py directly")
+print(f"Testing lead to gold: {alchemy.transmutation.recipes.lead_to_gold()}")

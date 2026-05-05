@@ -10,14 +10,25 @@ class DataProcessor(ABC):
         self.new_list: list[tuple[int, str]] = []
         self.valid: bool = False
         self.index: int = 0
+        self.expected_type: type | tuple[type, ...]
+        self.message: str = ""
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
-        pass
+        self.data = [data] if not isinstance(data, list) else data
+        self.valid = all(isinstance(item, self.expected_type) for item in self.data)
+        return self.valid
 
     @abstractmethod
     def ingest(self, data: Any) -> None:
-        pass
+        if not self.valid:
+            print(f"Test invalid ingestion of {type(data).__name__} "
+                  f"'{data}' without prior validation:")
+
+            if not self.validate(data):
+                raise ValueError(self.message)
+        print(f"Processing data: {data}")
+        self.valid = False
 
     def output(self) -> tuple[int, str]:
         if not self.new_list:
@@ -28,75 +39,44 @@ class DataProcessor(ABC):
 class NumericProcessor(DataProcessor):
 
     def validate(self, data: Any) -> bool:
-        self.data = [data] if not isinstance(data, list) else data
-        self.valid = all(isinstance(item, (int, float)) for item in self.data)
-        return self.valid
+        self.expected_type = (int, float)
+        return super().validate(data)
 
-    def ingest(self, data: Any) -> None:
-        if not self.valid:
-            print(f"Test invalid ingestion of {type(data).__name__} "
-                  f"'{data}' without prior validation:")
-
-            temp_data = [data] if not isinstance(data, list) else data
-            if not all(isinstance(item, (int, float)) for item in temp_data):
-                raise ValueError("Improper numeric data")
-
-            self.data = temp_data
-
-        print(f"Processing data: {data}")
+    def ingest(self, data: int | float | list[int | float]) -> None:
+        self.message = "Improper numeric data"
+        super().ingest(data)
         for item in self.data:
             self.new_list.append((self.index, str(item)))
             self.index += 1
-        self.valid = False
 
 
 class TextProcessor(DataProcessor):
 
     def validate(self, data: Any) -> bool:
-        self.data = [data] if not isinstance(data, list) else data
-        self.valid = all(isinstance(item, str) for item in self.data)
-        return self.valid
+        self.expected_type = str
+        return super().validate(data)
 
-    def ingest(self, data: Any) -> None:
-        if not self.valid:
-            print(f"Test invalid ingestion of {type(data).__name__} "
-                  f"'{data}' without prior validation:")
-            temp_data = [data] if not isinstance(data, list) else data
-            if not all(isinstance(item, str) for item in temp_data):
-                raise ValueError("Improper text data")
-
-            self.data = temp_data
-
-        print(f"Processing data: {data}")
+    def ingest(self, data: str | list[str]) -> None:
+        self.message = "Improper text data"
+        super().ingest(data)
         for item in self.data:
             self.new_list.append((self.index, str(item)))
             self.index += 1
-        self.valid = False
 
 
 class LogProcessor(DataProcessor):
 
     def validate(self, data: Any) -> bool:
-        self.data = [data] if not isinstance(data, list) else data
-        self.valid = all(isinstance(item, dict) for item in self.data)
-        return self.valid
+        self.expected_type = dict
+        return super().validate(data)
 
-    def ingest(self, data: Any) -> None:
-        if not self.valid:
-            print(f"Test invalid ingestion of {type(data).__name__} "
-                  f"'{data}' without prior validation:")
-            temp_data = [data] if not isinstance(data, list) else data
-            if not all(isinstance(item, dict) for item in temp_data):
-                raise ValueError("Improper dict data")
-
-            self.data = temp_data
-
-        print(f"Processing data: {data}")
+    def ingest(self, data: dict | list[dict]) -> None:
+        self.message = "Improper numeric data"
+        super().ingest(data)
         for item in self.data:
             self.new_list.append((self.index, f"{item['log_level']}: "
                                   f"{item['log_message']}"))
             self.index += 1
-        self.valid = False
 
 
 def test_numeric_proc() -> None:
