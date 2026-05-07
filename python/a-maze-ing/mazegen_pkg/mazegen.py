@@ -20,28 +20,31 @@ class MazeGenerator():
         return mat
     
     def paint_42(self, mat):
-        n_blocks = max(min(int(self.size[0] /(3 * 2)), int(self.size[1] /(3 * 2))), 3)
-        space = 1
-        n_width = n_blocks * 2 + space
-        n_height = n_width - 2
 
-        print(n_blocks)
-        x = int(self.size[1]/2 - n_height/2) - 1
-        y = int(self.size[0]/2 - n_width/2) + 1
-        
-        for i in range(0, n_blocks):
-            mat[y + i][x] = 15
-            mat[y + n_blocks - 1][x + i] = 15
-            mat[y + n_blocks + i - 1][x + n_blocks - 1] = 15
-        
-        for j in range(0, n_blocks):
-            mat[y][x + n_blocks + j + space] = 15
-            mat[y + j][x + 2 * n_blocks + space - 1] = 15
-            mat[y + n_blocks - 1][x + n_blocks + space + j] = 15
-            mat[y + n_blocks + j - 1][x + n_blocks + space] = 15
-            mat[y + 2 * n_blocks - 2][x + n_blocks + space + j] = 15       
+        if self.size[0] > 5 and self.size[1] > 7:
 
-        #plt.imshow(mat, cmap='brg', vmin=1, vmax=10)
+            n_blocks = max(min(int(self.size[0]/(3 * 2)), 
+                            int(self.size[1]/(3 * 2))), 3)
+            space = 1
+            n_width = n_blocks * 2 + space
+            n_height = n_width - 2
+
+            x = int(self.size[1]/2 - n_height/2) - 1
+            y = int(self.size[0]/2 - n_width/2) + 1
+            
+            for i in range(0, n_blocks):
+                mat[y + i][x] = 15
+                mat[y + n_blocks - 1][x + i] = 15
+                mat[y + n_blocks + i - 1][x + n_blocks - 1] = 15
+            
+            for j in range(0, n_blocks):
+                mat[y][x + n_blocks + j + space] = 15
+                mat[y + j][x + 2 * n_blocks + space - 1] = 15
+                mat[y + n_blocks - 1][x + n_blocks + space + j] = 15
+                mat[y + n_blocks + j - 1][x + n_blocks + space] = 15
+                mat[y + 2 * n_blocks - 2][x + n_blocks + space + j] = 15       
+
+        #plt.imshow(mat, cmap='viridis', vmin=1, vmax=10)
         #plt.show()  
 
         return mat

@@ -4,6 +4,7 @@ class Creature(ABC):
     def __init__(self):
         self.name: str = self.__class__.__name__
         self.creature_type: str
+        super().__init__()
 
     @abstractmethod
     def attack(self) -> str:

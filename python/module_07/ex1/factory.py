@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
 from ex0 import CreatureFactory
+from .capability import Sproutling, Bloomelle, Shiftling, Morphagon
 
-class FlameFactory(CreatureFactory):
+class HealingCreatureFactory(CreatureFactory):
     def create_base(self):
-        return Flameling()
+        return Sproutling()
 
     def create_evolved(self):
-        return Pyrodon()
+        return Bloomelle()
 
 
-class AquaFactory(CreatureFactory):
+class TransformCreatureFactory(CreatureFactory):
     def create_base(self):
-        return Aquabub()
+        return Shiftling()
 
     def create_evolved(self):
-        return Torragon()
+        return Morphagon()
