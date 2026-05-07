@@ -3,6 +3,7 @@
 import numpy as np
 import random
 from typing import Any
+import sys
 
 #class MazeGenerator():
 #    def __init__(self, size, seed):
@@ -13,9 +14,12 @@ algo_list = []
 
 
 def open_file(config_file) -> list[str]:
-
-    with open(config_file) as config_file:
-        config: list[str] = config_file.readlines()
+    config: list[str] = []
+    try:
+        with open(config_file) as config_file:
+            config: list[str] = config_file.readlines()
+    except Exception as e:
+        print(f"File not found: {e}")
 
     return config
 
@@ -54,7 +58,7 @@ def get_keys_dict(config) -> dict[str, Any]:
 """
 Check valid coordinates without spaces
 """
-def is_coordinate(s: str) -> bool:
+def parse_coordinate(s: str) -> tuple[int, int] | None:
     parts = s.split(',')
 
     if len(parts) != 2:
@@ -68,8 +72,10 @@ def is_coordinate(s: str) -> bool:
 def check_data_format(keys_dict):
 
     for item in keys_dict:
+
         if item in ('WIDTH', 'HEIGHT', 'SEED'):
             keys_dict[item] = int(keys_dict[item])
+
         elif item == 'PERFECT':
             print(keys_dict[item].upper())
             if keys_dict[item].upper() == 'TRUE':
@@ -78,12 +84,14 @@ def check_data_format(keys_dict):
                 keys_dict[item] = False
             else:
                 raise Exception("algo pasa")
+
         elif item in ('ENTRY', 'EXIT'):
-            coord = is_coordinate(keys_dict[item])
-            if coord:
+            coord = parse_coordinate(keys_dict[item])
+            if coord is not None:
                 keys_dict[item] = coord
             else:
                 raise Exception("algo si pasa")
+
     print("Dictionary succesfully registered")  
     return(keys_dict)
 
@@ -130,8 +138,18 @@ def swap_nibbles(x):
 
 
 def main() -> None:
-    config = open_file("config.txt")
-    
+
+    args = sys.argv[1:]
+    if len(args) != 1:
+        print("Incorrect number of arguments provided")
+        exit()
+
+    config_file = sys.argv[1]
+    config = open_file(config_file) 
+
+    if not config:
+        exit()
+           
     keys_dict = get_keys_dict(config)
 
     if not bool(keys_dict):
@@ -143,8 +161,10 @@ def main() -> None:
     except Exception as e:
         print(e)
 
-    if check_entry_exit(keys_dict):
-        
+    if not check_entry_exit(keys_dict):
+        print("Impossible maze parameters")
+        exit()
+
 
 
 #def convert_to_byte():
