@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
- 
-import numpy as np
-import random
+
+from mazegen_pkg import MazeGenerator
 from typing import Any
 import sys
-
-#class MazeGenerator():
-#    def __init__(self, size, seed):
-
-
-allowed_keys = ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT', 'SEED', 'ALGORITHM']
-algo_list = []
 
 
 def open_file(config_file) -> list[str]:
@@ -23,6 +15,7 @@ def open_file(config_file) -> list[str]:
 
     return config
 
+
 """
 Checks if all required keys are provided in the config file
 and there are no duplicates, or extra keys
@@ -30,6 +23,16 @@ and there are no duplicates, or extra keys
 def check_keys(config) -> bool:
 
     keys: list[str] = []
+    allowed_keys = [
+        'WIDTH', 
+        'HEIGHT', 
+        'ENTRY', 
+        'EXIT', 
+        'OUTPUT_FILE', 
+        'PERFECT', 
+        'SEED', 
+        'ALGORITHM'
+    ]
 
     for line in config:
         line.strip()
@@ -55,6 +58,7 @@ def get_keys_dict(config) -> dict[str, Any]:
 
     return keys_dict
 
+
 """
 Check valid coordinates without spaces
 """
@@ -69,8 +73,10 @@ def parse_coordinate(s: str) -> tuple[int, int] | None:
     
     return None
 
+
 def check_data_format(keys_dict):
 
+    algo_list: list[str] = ['algo1']
     for item in keys_dict:
 
         if item in ('WIDTH', 'HEIGHT', 'SEED'):
@@ -83,17 +89,22 @@ def check_data_format(keys_dict):
             elif keys_dict[item].upper() == 'FALSE':
                 keys_dict[item] = False
             else:
-                raise Exception("algo pasa")
+                raise Exception("The value of Perfect parameter is not a boolean")
 
         elif item in ('ENTRY', 'EXIT'):
             coord = parse_coordinate(keys_dict[item])
             if coord is not None:
                 keys_dict[item] = coord
             else:
-                raise Exception("algo si pasa")
+                raise Exception("Wrong coordinates")
+            
+        elif item == 'ALGORITHM':
+            if keys_dict[item] not in algo_list:
+                raise Exception("Unknown algorithm")
 
     print("Dictionary succesfully registered")  
     return(keys_dict)
+
 
 def check_entry_exit(keys_dict):
     entry = keys_dict['ENTRY']
@@ -113,16 +124,6 @@ def check_entry_exit(keys_dict):
         return False
 
     return True
-
-
-
-    #np.random.seed(seed)
-
-    # Creates a matrix of random numbers from 1 to 15
-    #mat = np.random.randint(1, 16, size=(height, width))
-    # Formats matrix into hexadecimal format
-    #hex_mat = np.vectorize(lambda x: format(x, 'X'))(mat)
-    #return mat
 
 
 def swap_nibbles(x):
@@ -165,6 +166,11 @@ def main() -> None:
         print("Impossible maze parameters")
         exit()
 
+    size = keys_dict['HEIGHT'], keys_dict['WIDTH']
+    seed = keys_dict['SEED']
+
+    maze_gen = MazeGenerator(size, seed)
+    print(maze_gen.generate())
 
 
 #def convert_to_byte():
