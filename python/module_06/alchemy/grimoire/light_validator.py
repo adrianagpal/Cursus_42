@@ -1,11 +1,12 @@
-#!/usr/bin/env python3
+def validate_ingredients(ingredients: str) -> str:
 
-from light_spellbook import light_spell_allowed_ingredients
+    from .light_spellbook import light_spell_allowed_ingredients
 
-def validate_ingredients(ingredients: str):
-    parts = ingredients.split(" ").strip(",")
-    flag = "INVALID"
+    parts = [p.strip(",") for p in ingredients.split()]
+
+    allowed: list[str] = light_spell_allowed_ingredients()
+
     for ingredient in parts:
-        if ingredient in light_spell_allowed_ingredients():
-            flag = "VALID"
-    return flag
+        if ingredient in allowed:
+            return "VALID"
+    return "INVALID"

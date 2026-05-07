@@ -10,7 +10,8 @@ class Creature(ABC):
         pass
 
     def describe(self) -> str:
-        return f"{self.name} is of type {self.creature_type}"
+        return f"{self.name} is a {self.creature_type} type Creature"
+
 
 class Flameling(Creature):
     def __init__(self):

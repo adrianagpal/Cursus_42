@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-from ex0 import factory
 
-def verify_factory(factory: factory.CreatureFactory):
+from ex0 import CreatureFactory, FlameFactory, AquaFactory
+
+def verify_factory(factory: CreatureFactory):
     
     print("Testing factory")
     base = factory.create_base()
@@ -13,7 +14,7 @@ def verify_factory(factory: factory.CreatureFactory):
     print(evolution.attack())
 
 
-def creature_battle(factory1: factory.CreatureFactory, factory2: factory.CreatureFactory):
+def creature_battle(factory1: CreatureFactory, factory2: CreatureFactory):
     print("Testing battle")
     base1 = factory1.create_base()
     print(base1.describe())
@@ -25,11 +26,11 @@ def creature_battle(factory1: factory.CreatureFactory, factory2: factory.Creatur
     print(base2.attack())
 
 def main():
-    flame_factory = factory.FlameFactory()
+    flame_factory = FlameFactory()
     verify_factory(flame_factory)
     print()
 
-    aqua_factory = factory.AquaFactory()
+    aqua_factory = AquaFactory()
     verify_factory(aqua_factory)
     print()
 

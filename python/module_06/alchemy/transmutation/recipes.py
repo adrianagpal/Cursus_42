@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
-
-import alchemy
+from ..elements import create_air
+from ..potions import strength_potion
 import elements
 
-def lead_to_gold():
+
+def lead_to_gold() -> str:
     return (f"Recipe transmuting Lead to Gold: brew "
-            f"{alchemy.create_air()!r} and {alchemy.strength_potion()!r} "
+            f"{create_air()!r} and {strength_potion()!r} "
             f"mixed with {elements.create_fire()!r}")
