@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 20:28:53 by adrianag          #+#    #+#             */
-/*   Updated: 2025/12/03 20:28:55 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/05/06 16:10:04 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,13 @@ int	ft_lstsize(t_list *lst)
 		temp = temp->next;
 	}
 	return (size);
+}
+
+#include <stdio.h>
+
+int main(void)
+{
+	t_list *node = ft_lstnew("hola");
+	int count = ft_lstsize(node);
+	printf("%d", count);
 }

@@ -6,7 +6,7 @@
 /*   By: adrianag <adrianag@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 20:29:46 by adrianag          #+#    #+#             */
-/*   Updated: 2025/12/03 20:44:18 by adrianag         ###   ########.fr       */
+/*   Updated: 2026/05/06 15:54:17 by adrianag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,19 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	}
 	return (res);
+}
+
+#include <stdio.h>
+
+int	main(void)
+{
+	char const *s = "Hola me llamo Adri";
+	char **res = ft_split(s, 'p');
+
+	while(*res)
+	{
+		printf("%s\n", *res);
+		res++;
+	}
+	
 }

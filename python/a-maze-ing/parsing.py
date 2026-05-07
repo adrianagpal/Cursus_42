@@ -56,6 +56,7 @@ def get_keys_dict(config) -> dict[str, Any]:
             except Exception as e:
                 print(e)
 
+    print(keys_dict)
     return keys_dict
 
 
@@ -112,7 +113,7 @@ def check_entry_exit(keys_dict):
     width = keys_dict['WIDTH']
     height = keys_dict['HEIGHT']
 
-    if entry == exit:
+    if entry == exit_coord:
         return False
 
     if (
@@ -168,9 +169,12 @@ def main() -> None:
 
     size = keys_dict['HEIGHT'], keys_dict['WIDTH']
     seed = keys_dict['SEED']
+    entry = keys_dict['ENTRY']
+    exit_coord = keys_dict['EXIT']
 
     maze_gen = MazeGenerator(size, seed)
-    print(maze_gen.generate())
+    mat = maze_gen.generate(entry, exit_coord)
+    print(maze_gen.paint_42(mat))
 
 
 #def convert_to_byte():
