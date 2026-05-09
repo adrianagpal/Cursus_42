@@ -35,3 +35,11 @@ Method chaining: if in a method, I return 'self', then it returns the object and
 Static method: A static method in Python is a method that belongs to a class rather than an instance of the class. This means it can be called directly on the class itself, without the need to create an instance of the class. 
 
 Class method: A class method is a method that receives the class itself as the first argument, conventionally named cls. It can access and modify class-level data and is often used to define factory methods. A factory method is a method that creates and returns an object of the class.
+
+# Pydantic
+The Pydantic library in Python is used for data validation and data parsing using Python type hints.
+
+Before using Pydantic, install it using pip, including the optional settings module:
+> pip install pydantic pydantic-settings
+
+A Pydantic model is a Python class that defines the structure of your data using type hints. It automatically checks and converts input values to the correct types. Pydantic still keeps validation in place when you modify values.
