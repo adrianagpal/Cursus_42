@@ -1,10 +1,10 @@
+#!/usr/bin/env python3
+
 from ex1 import HealingCreatureFactory, TransformCreatureFactory
-from ex0 import CreatureFactory
-from ex0.creature import Creature
 from ex1.capability import Sproutling, Bloomelle, Shiftling, Morphagon
 
 
-def test_healing(factory: HealingCreatureFactory):
+def test_healing(factory: HealingCreatureFactory) -> None:
 
     print(" base:")
     base: Sproutling = factory.create_base()
@@ -19,7 +19,7 @@ def test_healing(factory: HealingCreatureFactory):
     print(evolution.heal())
 
 
-def test_transform(factory: TransformCreatureFactory):
+def test_transform(factory: TransformCreatureFactory) -> None:
 
     print(" base:")
     base: Shiftling = factory.create_base()
@@ -38,7 +38,7 @@ def test_transform(factory: TransformCreatureFactory):
     print(evolution.revert())
 
 
-def main():
+def main() -> None:
 
     print("Testing Creature with healing capability")
     heal_factory: HealingCreatureFactory = HealingCreatureFactory()

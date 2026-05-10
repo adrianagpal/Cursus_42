@@ -1,5 +1,4 @@
 from ex0 import CreatureFactory
-from ex0.creature import Creature
 from .capability import Sproutling, Bloomelle, Shiftling, Morphagon
 
 
