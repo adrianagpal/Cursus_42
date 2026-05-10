@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from ex0.creature import Creature
-from ex1 import HealCapability, TransformCapability
+from ex1.capability import HealCapability, TransformCapability
 
 
 class BattleStrategy(ABC):
@@ -9,10 +9,11 @@ class BattleStrategy(ABC):
         super().__init__()
 
     @abstractmethod
-    def act(self):
+    def act(self, creature) -> None:
         pass
 
-    def is_valid(self) -> bool:
+    @abstractmethod
+    def is_valid(self, creature) -> bool:
         pass
 
 
@@ -21,11 +22,11 @@ class NormalStrategy(BattleStrategy):
     def is_valid(self, creature) -> bool:
         return(hasattr(creature, "attack"))
     
-    def act(self, creature, opponent) -> None:
-        if not self.valid(creature):
-            raise Exception("NormalStrategy requires attack capability")
+    def act(self, creature) -> None:
+        if not self.is_valid(creature):
+            raise Exception(f"Invalid Creature {creature.name!r} for this normal strategy")
         
-        creature.attack(opponent)
+        print(creature.attack())
 
 
 class AggressiveStrategy(BattleStrategy):
@@ -37,13 +38,13 @@ class AggressiveStrategy(BattleStrategy):
             hasattr(creature, "revert")
         )
     
-    def act(self, creature, opponent) -> None:
-        if not self.valid(creature):
-            raise Exception("AggressiveStrategy requires attack, transform and revert capabilities")
+    def act(self, creature) -> None:
+        if not self.is_valid(creature):
+            raise Exception(f"Invalid Creature {creature.name!r} for this aggressive strategy")
         
-        creature.transform()
-        creature.attack(opponent)
-        creature.revert()
+        print(creature.transform())
+        print(creature.attack())
+        print(creature.revert())
 
 
 class DefensiveStrategy(BattleStrategy):
@@ -54,9 +55,9 @@ class DefensiveStrategy(BattleStrategy):
             hasattr(creature, "heal")
         )
     
-    def act(self, creature, opponent) -> None:
-        if not self.valid(creature):
-            raise Exception("DefensiveStrategy requires attack and heal capabilities")
+    def act(self, creature) -> None:
+        if not self.is_valid(creature):
+            raise Exception(f"Invalid Creature {creature.name!r} for this defensive strategy")
         
-        creature.attack(opponent)
-        creature.heal()
+        print(creature.attack())
+        print(creature.heal())
