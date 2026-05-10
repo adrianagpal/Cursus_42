@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
+
 class Creature(ABC):
-    def __init__(self):
+    def __init__(self) -> None:
         self.name: str = self.__class__.__name__
         self.creature_type: str
         super().__init__()
@@ -15,7 +16,7 @@ class Creature(ABC):
 
 
 class Flameling(Creature):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.creature_type = "Fire"
 
@@ -24,7 +25,7 @@ class Flameling(Creature):
 
 
 class Pyrodon(Creature):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.creature_type = "Fire/Flying"
 
@@ -33,7 +34,7 @@ class Pyrodon(Creature):
 
 
 class Aquabub(Creature):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.creature_type = "Water"
 
@@ -42,7 +43,7 @@ class Aquabub(Creature):
 
 
 class Torragon(Creature):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.creature_type = "Water"
 

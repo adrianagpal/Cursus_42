@@ -1,16 +1,17 @@
 from ex1 import HealingCreatureFactory, TransformCreatureFactory
 from ex0 import CreatureFactory
 
+
 def test_healing(factory: HealingCreatureFactory):
 
     print(" base:")
-    base = factory.create_base()
+    base: CreatureFactory = factory.create_base()
     print(base.describe())
     print(base.attack())
     print(base.heal())
 
     print(" evolved:")
-    evolution = factory.create_evolved()
+    evolution: CreatureFactory = factory.create_evolved()
     print(evolution.describe())
     print(evolution.attack())
     print(evolution.heal())
@@ -19,7 +20,7 @@ def test_healing(factory: HealingCreatureFactory):
 def test_transform(factory: TransformCreatureFactory):
 
     print(" base:")
-    base = factory.create_base()
+    base: CreatureFactory = factory.create_base()
     print(base.describe())
     print(base.attack())
     print(base.transform())
@@ -27,23 +28,26 @@ def test_transform(factory: TransformCreatureFactory):
     print(base.revert())
 
     print(" evolved:")
-    evolution = factory.create_evolved()
+    evolution: CreatureFactory = factory.create_evolved()
     print(evolution.describe())
     print(evolution.attack())
     print(evolution.transform())
     print(evolution.attack())
     print(evolution.revert())
 
+
 def main():
 
     print("Testing Creature with healing capability")
-    heal_factory = HealingCreatureFactory()
+    heal_factory: CreatureFactory = HealingCreatureFactory()
     test_healing(heal_factory)
     print()
 
     print("Testing Creature with transform capability")
-    transform_factory = TransformCreatureFactory()
+    transform_factory: CreatureFactory = TransformCreatureFactory()
     test_transform(transform_factory)
     print()
 
-main()
+
+if __name__ == '__main__':
+    main()
