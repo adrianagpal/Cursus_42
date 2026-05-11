@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from ex0.creature import Creature
-from ex0 import FlameFactory, AquaFactory
+from ex0 import CreatureFactory, FlameFactory, AquaFactory
 from ex1 import HealingCreatureFactory, TransformCreatureFactory
 from ex2 import BattleStrategy
 from ex2 import NormalStrategy, DefensiveStrategy, AggressiveStrategy
@@ -9,7 +8,10 @@ from typing import Any
 import random
 
 
-def battle(opponents: list[tuple[Creature, BattleStrategy[Any]]]) -> None:
+def battle(opponents: list[tuple[CreatureFactory[Any, Any],
+                                 BattleStrategy[Any]]]) -> None:
+
+    methods = ["create_base", "create_evolved"]
 
     print("*** Tournament ***")
     print(f"{len(opponents)} opponents involved\n")
@@ -17,8 +19,10 @@ def battle(opponents: list[tuple[Creature, BattleStrategy[Any]]]) -> None:
     for index1 in range(len(opponents)):
         for index2 in range(index1 + 1, len(opponents)):
 
-            creature1, strategy1 = opponents[index1]
-            creature2, strategy2 = opponents[index2]
+            factory1, strategy1 = opponents[index1]
+            factory2, strategy2 = opponents[index2]
+            creature1 = getattr(factory1, random.choice(methods))()
+            creature2 = getattr(factory2, random.choice(methods))()
 
             print("* Battle *")
             print(creature1.describe())
@@ -43,41 +47,39 @@ def main() -> None:
     defensive: BattleStrategy[Any] = DefensiveStrategy()
     aggressive: BattleStrategy[Any] = AggressiveStrategy()
 
-    heal_creatures = [heal_factory.create_base(),
-                      heal_factory.create_evolved()]
+    factories: list[CreatureFactory[Any, Any]] = [heal_factory,
+                                                  transform_factory]
 
-    trans_creatures = [transform_factory.create_base(),
-                       transform_factory.create_evolved()]
+    Opponent = tuple[
+        CreatureFactory[Any, Any],
+        BattleStrategy[Any],
+    ]
 
     print("Tournament 0 (basic)")
     print(" [ (Flameling+Normal), (Healing+Defensive) ]")
 
-    flame_factory = FlameFactory()
-    flameling = flame_factory.create_base()
-    tournament0 = [
-        (flameling, normal),
-        (random.choice(heal_creatures), defensive)
+    tournament0: list[Opponent] = [
+        (FlameFactory(), normal),
+        (random.choice(factories), defensive)
     ]
     battle(tournament0)
 
     print("Tournament 1 (error)")
     print(" [ (Flameling+Aggressive), (Healing+Defensive) ]")
 
-    tournament1 = [
-        (flameling, aggressive),
-        (random.choice(heal_creatures), defensive)
+    tournament1: list[Opponent] = [
+        (FlameFactory(), aggressive),
+        (random.choice(factories), defensive)
     ]
     battle(tournament1)
 
     print("Tournament 2 (multiple)")
     print(" [ (Aquabub+Normal), (Healing+Defensive), (Transform+Aggressive) ]")
 
-    aqua_factory = AquaFactory()
-    aquabub = aqua_factory.create_base()
-    tournament2 = [
-        (aquabub, normal),
-        (random.choice(heal_creatures), defensive),
-        (random.choice(trans_creatures), aggressive)
+    tournament2: list[Opponent] = [
+        (AquaFactory(), normal),
+        (random.choice(factories), defensive),
+        (random.choice(factories), aggressive)
     ]
     battle(tournament2)
 

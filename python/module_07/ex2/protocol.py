@@ -1,15 +1,28 @@
+from abc import abstractmethod
 from typing import Protocol
 
 
 class CanAttack(Protocol):
     name: str
-    def attack(self) -> str: ...
+
+    @abstractmethod
+    def attack(self) -> str:
+        pass
 
 
-class CanHeal(CanAttack, Protocol):
-    def heal(self) -> str: ...
+class CanHeal(CanAttack):
+
+    @abstractmethod
+    def heal(self) -> str:
+        pass
 
 
-class CanTransform(CanAttack, Protocol):
-    def transform(self) -> str: ...
-    def revert(self) -> str: ...
+class CanTransform(CanAttack):
+
+    @abstractmethod
+    def transform(self) -> str:
+        pass
+
+    @abstractmethod
+    def revert(self) -> str:
+        pass
