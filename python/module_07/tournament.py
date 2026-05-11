@@ -5,10 +5,11 @@ from ex0 import FlameFactory, AquaFactory
 from ex1 import HealingCreatureFactory, TransformCreatureFactory
 from ex2 import BattleStrategy
 from ex2 import NormalStrategy, DefensiveStrategy, AggressiveStrategy
+from typing import Any
 import random
 
 
-def battle(opponents: list[tuple[Creature, BattleStrategy]]) -> None:
+def battle(opponents: list[tuple[Creature, BattleStrategy[Any]]]) -> None:
 
     print("*** Tournament ***")
     print(f"{len(opponents)} opponents involved\n")
@@ -35,14 +36,18 @@ def battle(opponents: list[tuple[Creature, BattleStrategy]]) -> None:
 
 def main() -> None:
 
-    heal_factory: HealingCreatureFactory = HealingCreatureFactory()
-    transform_factory: TransformCreatureFactory = TransformCreatureFactory()
+    heal_factory = HealingCreatureFactory()
+    transform_factory = TransformCreatureFactory()
 
-    heal_creatures: list[Creature] = [heal_factory.create_base(),
-                                      heal_factory.create_evolved()]
+    normal: BattleStrategy[Any] = NormalStrategy()
+    defensive: BattleStrategy[Any] = DefensiveStrategy()
+    aggressive: BattleStrategy[Any] = AggressiveStrategy()
 
-    trans_creatures: list[Creature] = [transform_factory.create_base(),
-                                       transform_factory.create_evolved()]
+    heal_creatures = [heal_factory.create_base(),
+                      heal_factory.create_evolved()]
+
+    trans_creatures = [transform_factory.create_base(),
+                       transform_factory.create_evolved()]
 
     print("Tournament 0 (basic)")
     print(" [ (Flameling+Normal), (Healing+Defensive) ]")
@@ -50,8 +55,8 @@ def main() -> None:
     flame_factory = FlameFactory()
     flameling = flame_factory.create_base()
     tournament0 = [
-        (flameling, NormalStrategy()),
-        (random.choice(heal_creatures), DefensiveStrategy())
+        (flameling, normal),
+        (random.choice(heal_creatures), defensive)
     ]
     battle(tournament0)
 
@@ -59,8 +64,8 @@ def main() -> None:
     print(" [ (Flameling+Aggressive), (Healing+Defensive) ]")
 
     tournament1 = [
-        (flameling, AggressiveStrategy()),
-        (random.choice(heal_creatures), DefensiveStrategy())
+        (flameling, aggressive),
+        (random.choice(heal_creatures), defensive)
     ]
     battle(tournament1)
 
@@ -70,9 +75,9 @@ def main() -> None:
     aqua_factory = AquaFactory()
     aquabub = aqua_factory.create_base()
     tournament2 = [
-        (aquabub, NormalStrategy()),
-        (random.choice(heal_creatures), DefensiveStrategy()),
-        (random.choice(trans_creatures), AggressiveStrategy())
+        (aquabub, normal),
+        (random.choice(heal_creatures), defensive),
+        (random.choice(trans_creatures), aggressive)
     ]
     battle(tournament2)
 

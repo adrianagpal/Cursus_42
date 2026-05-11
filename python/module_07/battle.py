@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 
 from ex0 import CreatureFactory, FlameFactory, AquaFactory
+from ex0.creature import Creature
+from typing import TypeVar
 
 
-def verify_factory(factory: CreatureFactory) -> None:
+BaseT = TypeVar("BaseT", bound=Creature)
+EvolvedT = TypeVar("EvolvedT", bound=Creature)
+
+
+def verify_factory(factory: CreatureFactory[BaseT, EvolvedT]) -> None:
 
     print("Testing factory")
     base = factory.create_base()
