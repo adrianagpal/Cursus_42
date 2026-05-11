@@ -1,4 +1,5 @@
 import importlib
+import matplotlib.pyplot
 
 
 def check_dependencies() -> None:
@@ -37,7 +38,7 @@ def main() -> None:
         pd = modules["pandas"]
         plt = modules["matplotlib"]
     except KeyError:
-        print("Module not found.")
+        print("The environment dont have all required dependencies.")
         return
 
     print("Analyzing Matrix data...")
@@ -46,6 +47,16 @@ def main() -> None:
     data = np.random.randint(100, size=(1000))
     
     dataframe = pd.DataFrame({"index": index, "data": data})
+
+    print("Generating visualization...\n")
+    plt.pyplot.plot(dataframe["index"], dataframe["data"])
+    
+    file_name: str = 'matrix_analysis.png'
+    
+    plt.pyplot.savefig(file_name)
+
+    print("Analysis complete!")
+    print(f"Results saved to: {file_name}")
 
 
 if __name__ == '__main__':

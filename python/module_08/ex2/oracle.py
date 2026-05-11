@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv(override=True)
+load_dotenv()
 
 """
 Python environment variables are key-value pairs stored in our 
@@ -13,6 +13,7 @@ os.environ[] raises KeyError.
 
 print("\nORACLE STATUS: Reading the matrix...\n")
 
+var_dict = {}
 if not os.path.isfile('.env'):
     print("Missing configuration file")
 else:
@@ -28,8 +29,9 @@ for key in var_dict:
     if var_dict[key] is None:
         print(f"Variable {key} not configured.")
 
-print("Configuration loaded:")
-for key in var_dict:
-    print(f"{key}: {var_dict[key]}")
+if var_dict:
+    print("Configuration loaded:")
+    for key in var_dict:
+        print(f"{key}: {var_dict[key]}")
 
 
