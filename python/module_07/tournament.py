@@ -4,7 +4,7 @@ from ex0 import CreatureFactory, FlameFactory, AquaFactory
 from ex1 import HealingCreatureFactory, TransformCreatureFactory
 from ex2 import BattleStrategy
 from ex2 import NormalStrategy, DefensiveStrategy, AggressiveStrategy
-from typing import Any
+from typing import Any, TypeAlias
 import random
 
 
@@ -50,7 +50,7 @@ def main() -> None:
     factories: list[CreatureFactory[Any, Any]] = [heal_factory,
                                                   transform_factory]
 
-    Opponent = tuple[
+    Opponent: TypeAlias = tuple[
         CreatureFactory[Any, Any],
         BattleStrategy[Any],
     ]

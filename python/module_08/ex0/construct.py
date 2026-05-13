@@ -5,7 +5,8 @@ import os
 import site
 
 """
-Inside a venv, sys.prefix points to the directory of the virtual environment.
+sys.prefix points to the directory of the Python installation. If in a venv,
+this will point out to the directory of the virtual environment.
 sys.base.prefix points to the Python interpreter of the base installation.
 """
 
@@ -20,7 +21,7 @@ def output_base(venv: str) -> None:
     print("\nMATRIX STATUS: You're still plugged in\n")
 
     print(f"Current Python: {sys.executable}")
-    print(f"Virtual Environment: {venv}")
+    print(f"Virtual Environment: {venv}\n")
 
     print("WARNING: You're in the global environment!\n"
           "The machines can see everything you install.\n")

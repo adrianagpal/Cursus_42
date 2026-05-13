@@ -46,3 +46,10 @@ A Pydantic model is a Python class that defines the structure of your data using
 
 # Abstract Factory
 The Abstract Factory pattern is a design pattern used to create families of related objects without specifying their exact concrete classes. Instead of creating objects directly with new, the program uses a factory that knows how to build compatible objects together. For example, a GUI application may support both Windows and Mac systems, where each system needs its own buttons, windows, and menus. A WindowsFactory creates Windows-style components, while a MacFactory creates Mac-style components. The main advantage is that the client code works with interfaces instead of specific classes, making the code cleaner, easier to maintain, and simpler to extend. It also reduces large if/else structures and ensures that all created objects are compatible with each other. Unlike the Factory Method pattern, which creates a single object, Abstract Factory creates entire families of related objects.
+
+
+# Sys
+This module provides access to some variables used or maintained by the interpreter and to functions that interact strongly with the interpreter.
+
+# Install dependencies with pip
+> pip install -r requirements.txt
