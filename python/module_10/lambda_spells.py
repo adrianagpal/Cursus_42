@@ -24,6 +24,7 @@ def spell_transformer(spells: list[str])-> list[str]:
 
     return list(map(lambda x: '*'+x+'*', spells))
 
+
 def mage_stats(mages: list[dict])-> dict:
     max_val: int = max(mages, key=lambda x: x['power'])
     min_val: int = min(mages, key=lambda x: x['power'])
@@ -72,6 +73,7 @@ def main() -> None:
           f"({stats['min_power']['power']} power)")
 
     print(f"Average power: {stats['avg_power']} power")
+
 
 if __name__ == '__main__':
     main()
