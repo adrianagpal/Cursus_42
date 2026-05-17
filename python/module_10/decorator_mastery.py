@@ -49,7 +49,8 @@ if __name__ == '__main__':
 def power_validator(min_power: int) -> Callable:
 
     def wrapper():
-        
+        if MageGuild.validate_mage_name
+
 
 #def retry_spell(max_attempts: int) -> Callable
 
